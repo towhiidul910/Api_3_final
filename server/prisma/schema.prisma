@@ -1,0 +1,223 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+
+
+// server\prisma\schema.prisma
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  password  String?  // i made it optional to make it compatible with OAuth (google , email , github etc)
+  email     String  @unique
+  Phone     String?
+  language  String?
+  fakeId    Int      @default(autoincrement())
+  avatar    String?   // i kept it , some controller might brake without it
+  avatarUrl    String? // store filename or URL
+  avatarPublicId String?
+  multiImg  String[]
+  bio       String?
+  version   Float?
+
+  emailStatus EmailStatus @default(PENDING)
+
+  verified  Boolean @default(false) // ✅ is email verified // its not necessary
+  verificationTokens VerificationToken[]
+  
+  createdAt DateTime @default(now())
+  images Image[]
+  gImages GImage[]
+  post Post[]
+  address Address?
+  roles Role[] @relation("UserRoles")
+  userGroup UserGroup[]
+  refreshToken RefreshToken[]
+  authProvider AuthProvider[]
+  session Session[]
+}
+enum EmailStatus {
+  PENDING
+  SENT
+  VERIFIED
+  FAILED
+}
+enum OutboxTypes {
+  SIGNUP_OUTBOX
+  LOGIN_OUTBOX
+}
+model OutboxEvent {
+  id        String   @id @default(cuid())
+  type      OutboxTypes
+  payload   Payload?
+  status    OutboxStatus @default(PENDING)
+  retries   Int      @default(0)
+  createdAt DateTime @default(now())
+  processedAt DateTime?
+}
+
+
+model Payload {
+  id  String   @id @default(cuid())
+  OutboxEvent OutboxEvent @relation(fields: [outboxId], references: [id], onDelete: Cascade)
+  outboxId String @unique
+  userId  String
+  email String
+  name String
+  token String
+
+}
+
+enum OutboxStatus {
+  PENDING
+  PROCESSING
+  SENT
+  FAILED
+}
+
+
+enum VerificationTokenType {
+  SIGNUP
+  LOGIN
+}
+
+model VerificationToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type      VerificationTokenType
+
+  attempts  Int @default(0)
+  locked    Boolean
+
+  userId    String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+
+model Post {
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  title String
+  body String
+  image String
+  comments Comment[]
+}
+
+model Image {
+  id String @id @default(uuid())
+  imageUrl String
+  imagePublicId String
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+}
+
+model GImage {
+   id String @id @default(uuid())
+  imageUrl String
+  imagePublicId String
+  userId String
+  order   Int
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+}
+
+model Comment {
+  id Int @id @default(autoincrement())
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId Int
+  name String
+  email String
+  body String
+}
+
+model Address {
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+  street String
+  city String 
+  zipcode String
+}
+
+model Group {
+  id Int @id @default(autoincrement())
+  userGroups UserGroup[]
+  name String
+}
+
+model Role {
+  id Int @id @default(autoincrement())
+  users User[] @relation("UserRoles")
+  role String
+}
+
+model UserGroup {
+  id Int @id @default(autoincrement())
+  userId String 
+  groupId Int
+  joinedAt DateTime @default(now())
+  isModerator Boolean @default(false)
+  users User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  groups Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  @@unique([userId, groupId])
+}
+
+model RefreshToken {
+  id String @id @default(cuid())
+  token String @unique
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  revoked Boolean
+}
+
+model AuthProvider {
+  id String @id @default(cuid())
+  userId String 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider String        // "local", "google", "github"
+  providerId String?    // OAuth user id
+  createAt DateTime @default(now())
+
+  @@unique([provider, providerId])
+}
+
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+
+// 12.-
+// npm run prisma:generate
+// 13.
+// npx prisma migrate dev --name init
+// 14.
+// npm run seed
+// 15. if you get problem .
+// npx prisma migrate reset

@@ -1,0 +1,935 @@
+type can be extended using intersection (&)
+
+type Person = {
+  name: string;
+}
+type Employee = Person & {
+  employeeId: number
+}
+
+const employee: Employee = {
+  name: "John",
+  employeeId: 123,
+}
+
+and on the other hand interface can be extended using the extends keyword
+
+interface Person {
+  name: string;
+}
+
+interface Employee extends Person {
+  employeeId: number
+}
+
+const employee: Employee = {
+  name: "Jon",
+  employeeId: 123,
+}
+
+
+AND KEEP IN MIND
+TS  cashes extended interface by name enabling faster lookups in contrast interception types are re-evaluated each time they're used thats why TS suggest extending types with extends rather then creating intersection types
+
+
+
+interface supports declaration merging , which mean you can define multiple you can define multiple interface with the same name and type script marge them in single definition. Type don't
+
+
+
+interface User {
+  name: string
+}
+interface User {
+  age: number
+}
+
+const user: User = {
+  name: "Alice",
+  age: 30
+}
+
+
+choose type when need to define : unions , Tuples or other complex type ,  create type Alias for a function signature or require more flexibility in defining types
+
+choose interface when defining the shape of an object needing extensibility or wanting to take advantage of declaration margin
+
+🦕type vs 🦕interface ❓what type can do and interface cant? 
+Oh, now you’re playing with the big kids! Time to show you why `type` is basically the Swiss Army knife in TypeScript, while `interface` is more like the trusty hammer — solid but limited.
+
+---
+
+### What `type` can do but `interface` **cannot** — with examples and explanations:
+
+---
+
+### 1. **Union types**
+
+```ts
+type Role = "admin" | "user" | "guest";
+```
+
+**What’s happening?**
+You’re telling TypeScript: “Role can only be one of these string literals.” It’s a **union** — a type that can be one thing *or* another.
+
+**Why `interface` can’t do this:**
+`interface` can’t represent “one of these possible types.” It’s strictly for object shapes, not unions or primitive sets.
+
+---
+
+### 2. **Type aliases for primitives**
+
+```ts
+type Age = number;
+```
+
+**What’s happening?**
+This just renames `number` as `Age`. Not game-changing, but useful for clarity in code.
+
+**`interface` can’t alias primitives** — it’s object-only.
+
+---
+
+### 3. **Tuple types**
+
+```ts
+type Point = [number, number];
+```
+
+**What’s happening?**
+You define a fixed-length array with types in each position — here, a 2D coordinate.
+
+**`interface` can’t describe tuples** because it only describes objects with named properties.
+
+---
+
+### 4. **Intersection types**
+
+```ts
+type Person = { name: string } & { age: number };
+```
+
+**What’s happening?**
+You’re merging two types into one. `Person` must have both `name` and `age`. It’s like combining two blueprints into a super blueprint.
+
+**You *can* extend interfaces, but intersection types are more flexible:**
+
+* Intersection works for unions, primitives, tuples, etc.
+* Interfaces only extend objects.
+
+---
+
+### 5. **Mapped types and conditional types (Advanced stuff)**
+
+```ts
+type Readonly<T> = {
+  readonly [K in keyof T]: T[K];
+};
+```
+
+**What’s happening?**
+You’re creating a new type that makes every property of `T` readonly dynamically. Meta-programming with types.
+
+**`interface` can’t do this** — it’s static and can’t do type-level programming like mapped or conditional types.
+
+---
+
+### Why all this matters
+
+* **`type` lets you create complex, flexible type expressions** — unions, intersections, tuples, conditionals, mapped types — you name it.
+* **`interface` is more rigid and focused on describing objects** and how they extend or merge.
+
+---
+
+### Quick side-by-side:
+
+```ts
+// Union type (type only)
+type Status = "loading" | "success" | "error";
+
+// Tuple (type only)
+type RGB = [number, number, number];
+
+// Intersection (mostly type)
+type Employee = Person & { employeeId: string };
+
+// Mapped type (type only)
+type Partial<T> = { [P in keyof T]?: T[P] };
+
+// Interface example (object only)
+interface User {
+  name: string;
+  age: number;
+}
+```
+
+---
+
+### TL;DR
+
+**`type` = TypeScript’s flexible swiss army knife: handles unions, intersections, tuples, primitives, mapped types**.
+**`interface` = Clean, extendable object blueprint, but can’t handle fancy type combos or primitives.**
+
+---
+
+### Pro tip:
+
+If you need fancy type combos or generics, `type` is your go-to. If you want clean, extendable object shapes (especially in public APIs or big codebases), lean on `interface`.
+
+---
+
+Ready for a roast on when you mix these poorly or want me to quiz you on these concepts with a little edge?
+
+
+🦕tuple
+type UserTemplate = [number, string];
+
+const user: UserTemplate = [21, "Sekiro"]; 
+const user2: UserTemplate[] = [
+  [21, "Sekiro"],
+  [35, "Dark Souls"],
+];  
+
+
+console.log("user :", user[0], user[1])   // user : 21 Sekiro
+console.log("user 2 :", user2[0], user2[1]) // user 2 : (2) [21, 'Sekiro'] (2) [35, 'Dark Souls']
+
+
+
+Alright, you want to deep-dive into **tuples**? Buckle up — we’re going beyond “it’s an array with fixed length” and getting into the gritty, nerdy details that separate tuples from your regular arrays.
+
+---
+
+### TL;DR
+
+**Tuple** = A fixed-length, fixed-type array — think of it like a tiny, ordered box of stuff, where each slot has a strict type. It’s a way for TypeScript to keep track of *exactly* what’s at each position.
+
+---
+
+### What the heck is a tuple?
+
+A tuple is an **array-like structure** where:
+
+* The **length is fixed** (you know exactly how many elements there are).
+* Each element’s **type is known and can be different**.
+* The **order matters** — index 0 is type A, index 1 is type B, etc.
+
+---
+
+### Why do we need tuples when we have arrays?
+
+Arrays are **homogeneous** — they expect all elements to be the same type:
+
+```ts
+let numbers: number[] = [1, 2, 3, 4];
+```
+
+If you try to mix types, TypeScript complains:
+
+```ts
+let mixed: number[] = [1, "two", 3]; // Error: string not assignable to number
+```
+
+But sometimes, you want an array with **specific types in specific spots**, like:
+
+* `[string, number]` representing `[username, userAge]`
+* `[number, number, number]` for RGB color values
+* `[latitude, longitude]` coordinates
+
+---
+
+### Syntax of tuples
+
+```ts
+type UserTuple = [string, number];
+const user1: UserTuple = ["Bro", 21]; // Perfect
+
+// This throws errors:
+const user2: UserTuple = [21, "Bro"]; // Types out of order
+const user3: UserTuple = ["Bro"];      // Missing element
+const user4: UserTuple = ["Bro", 21, "extra"]; // Too many elements
+```
+
+---
+
+### What’s happening under the hood?
+
+* TypeScript stores **type info at each index**.
+* You **can’t add or remove** elements beyond the declared length without errors (well, mostly — there's some flexibility with `.push()` but that can cause subtle bugs).
+* When accessing elements, TS knows **exactly what type to expect** at that position.
+
+```ts
+const user: [string, number] = ["Bro", 21];
+const name = user[0]; // type is string
+const age = user[1];  // type is number
+```
+
+Try `user[2]`? TS says: “Bro, no such index.”
+
+---
+
+### What about array methods?
+
+Tuples are arrays, so you get array methods like `.push()`, `.pop()`, `.slice()`. But be careful — pushing wrong types will break your tuple type safety:
+
+```ts
+let tuple: [string, number] = ["Bro", 21];
+tuple.push(42); // Allowed because 42 fits number
+
+tuple.push("Oops"); 
+// Also allowed at runtime because push is dynamic, but TS won’t catch this as an error because it allows push for tuples in general (which is a TypeScript oddity).
+```
+
+So you gotta be careful not to break your tuple assumptions by adding weird stuff dynamically.
+
+---
+
+### Advanced tuple features (TS 4.0+)
+
+* **Rest elements in tuples**
+
+```ts
+type StringNumberTuple = [string, ...number[]];
+const example1: StringNumberTuple = ["hello"];
+const example2: StringNumberTuple = ["hello", 1, 2, 3];
+```
+
+* **Optional tuple elements**
+
+```ts
+type OptionalTuple = [string, number?];
+const t1: OptionalTuple = ["only string"];
+const t2: OptionalTuple = ["string", 42];
+```
+
+* **Readonly tuples**
+
+```ts
+const readonlyTuple: readonly [string, number] = ["Bro", 21];
+// readonlyTuple[0] = "Nope"; // Error: cannot assign to readonly tuple
+```
+
+---
+
+### Why care about tuples?
+
+* They help **enforce strict contracts** for things like function parameters and returns, where order and type matter.
+
+Example:
+
+```ts
+function getUserInfo(): [string, number] {
+  return ["Bro", 21];
+}
+
+const [name, age] = getUserInfo();
+```
+
+* Helps avoid accidental misuse and makes your code more predictable and type-safe.
+
+---
+
+### Summary
+
+| Feature               | Tuple                                   | Array                          |
+| --------------------- | --------------------------------------- | ------------------------------ |
+| Fixed length          | Yes                                     | No                             |
+| Known types per index | Yes                                     | Usually one type               |
+| Mixed types allowed   | Yes                                     | No (usually homogeneous)       |
+| Order matters         | Absolutely                              | Generally yes, but less strict |
+| Use cases             | Strict contracts, fixed data structures | General collections            |
+
+---
+
+### Ready for a little challenge?
+
+Try typing a function that returns a tuple representing a user with `[id: number, name: string, isActive: boolean]` and destructure it. Wanna give it a shot or want me to throw some wild tuple edge cases your way?
+
+---
+
+**TL;DR:**
+Tuple = a fixed-size, ordered list of elements where **each index has a defined type**, unlike arrays that usually have the same type for all elements.
+
+---
+
+And if you screw this up, no worries — I’ll roast you gently like “Bro, you’re mixing your arrays and tuples like a confused NPC.” 😎
+
+
+🦕any and 🦕unkown
+
+They’re similar in that both mean “I don’t know the type,” but they behave **very differently** when TypeScript’s type checker gets involved.
+
+Let’s break it down:
+
+---
+
+## **1. `any` in JS/TS**
+
+* Tells TypeScript: “Shut up, I know what I’m doing.”
+* You can do **anything** with it — no type checking.
+* It’s basically **turning off TypeScript** for that value.
+
+Example:
+
+```ts
+let x: any = "Sekiro";
+x = 42;          // ✅ allowed
+x.toUpperCase(); // ✅ allowed (even if x was a number at runtime)
+```
+
+⚠️ **Danger:** You can call methods that don’t exist and TypeScript won’t complain — but you’ll crash at runtime.
+
+---
+
+## **2. `unknown` in TS**
+
+* Means “I don’t know the type **yet**.”
+* You **must** check or narrow it before using it.
+* It’s a **safe version** of `any`.
+
+Example:
+
+```ts
+let y: unknown = "Sekiro";
+y = 42;          // ✅ allowed to store anything
+y.toUpperCase(); // ❌ ERROR: Object is of type 'unknown'
+
+if (typeof y === "string") {
+  y.toUpperCase(); // ✅ now allowed
+}
+```
+
+---
+
+## **3. Big difference in practice**
+
+| Feature                      | `any`   | `unknown`  |
+| ---------------------------- | ------- | ---------- |
+| Store any value?             | ✅ Yes   | ✅ Yes      |
+| Call methods without checks? | ✅ Yes   | ❌ No       |
+| Type safety?                 | 🚫 None | ✅ Enforced |
+| Compile-time help?           | ❌ No    | ✅ Yes      |
+
+---
+
+**Analogy:**
+
+* `any` is like telling the compiler “Go away, I’m coding drunk.” 🍺
+* `unknown` is like telling the compiler “I’ll tell you what this is once I check it.” 🕵️
+
+---
+
+**TL;DR:**
+
+* `any` = unsafe, disables type checking for that value.
+* `unknown` = safe, forces you to type-check before using.
+
+---
+
+If you want, I can show you **how `unknown` is super useful in generic functions and APIs** so you keep type safety but still handle “anything.”
+That’s where it really outshines `any`.
+
+
+🦕mapped Type
+Alright, let’s crack open the **Mapped Types** toolbox and play around.
+These are the “mass-edit” buttons for TypeScript — think **Photoshop batch edit**, but for object types.
+
+---
+
+## **1. Basic “Copy & Transform”**
+
+Start with a base type:
+
+```ts
+type User = {
+  name: string;
+  age: number;
+  isAdmin: boolean;
+};
+```
+
+Now, let’s map over it:
+
+```ts
+type OptionalUser = {
+  [K in keyof User]?: User[K];
+};
+// Result:
+// {
+//   name?: string;
+//   age?: number;
+//   isAdmin?: boolean;
+// }
+```
+
+**Explanation:**
+
+* `keyof User` = `"name" | "age" | "isAdmin"` (union of keys).
+* `[K in keyof User]` = loop through keys.
+* `User[K]` = original type of that property.
+* `?` makes it optional.
+
+---
+
+## **2. Readonly Transformation**
+
+```ts
+type ReadonlyUser = {
+  readonly [K in keyof User]: User[K];
+};
+// {
+//   readonly name: string;
+//   readonly age: number;
+//   readonly isAdmin: boolean;
+// }
+```
+
+**Why?** Prevent accidental property changes.
+
+---
+
+## **3. Converting All Properties to Another Type**
+
+```ts
+type Stringify<T> = {
+  [K in keyof T]: string;
+};
+
+type StringifiedUser = Stringify<User>;
+// All values become strings:
+// { name: string; age: string; isAdmin: string; }
+```
+
+**Why?** Good for serialization or transforming backend responses.
+
+---
+
+## **4. Removing `readonly` or `optional`**
+
+You can also remove modifiers:
+
+```ts
+type Mutable<T> = {
+  -readonly [K in keyof T]: T[K];
+};
+
+type RequiredProps<T> = {
+  [K in keyof T]-?: T[K];
+};
+```
+
+* `-readonly` removes the readonly flag.
+* `-?` removes the optional flag.
+
+---
+
+## **5. Conditional Inside a Mapped Type**
+
+Mixing **mapped types** with **conditional types** makes them god-tier:
+
+```ts
+type NullableProps<T> = {
+  [K in keyof T]: T[K] extends string ? string | null : T[K];
+};
+
+type NullableUser = NullableProps<User>;
+// {
+//   name: string | null;
+//   age: number;
+//   isAdmin: boolean;
+// }
+```
+
+**Explanation:**
+
+* For each property, if its type is `string`, make it `string | null`.
+* Others remain unchanged.
+
+---
+
+## **6. Key Remapping (`as` keyword in TS 4.1+)**
+
+You can rename keys dynamically:
+
+```ts
+type PrefixKeys<T> = {
+  [K in keyof T as `user_${string & K}`]: T[K];
+};
+
+type PrefixedUser = PrefixKeys<User>;
+// {
+//   user_name: string;
+//   user_age: number;
+//   user_isAdmin: boolean;
+// }
+```
+
+---
+
+## **7. Picking Specific Keys**
+
+```ts
+type PickProps<T, Keys extends keyof T> = {
+  [K in Keys]: T[K];
+};
+
+type NameOnly = PickProps<User, "name">;
+// { name: string }
+```
+
+(This is actually how TypeScript’s built-in `Pick` works.)
+
+---
+
+## **8. Making Properties Optional or Required Based on Condition**
+
+```ts
+type OptionalStrings<T> = {
+  [K in keyof T as T[K] extends string ? K : never]?: T[K];
+};
+
+type OptionalStringPropsUser = OptionalStrings<User>;
+// { name?: string }
+```
+
+**Explanation:**
+
+* `as` lets you skip properties by mapping them to `never`.
+* Here, only string properties are kept, and they become optional.
+
+---
+
+💡 **Why this matters:**
+Mapped types make it possible to **build reusable type utilities** like `Partial`, `Pick`, `Omit`, `Record`, `Readonly`, and dozens of custom transformations — all without repeating yourself.
+
+---
+
+If you want, I can **reverse-engineer** TypeScript’s built-in `Partial`, `Pick`, and `Omit` for you so you see how *real-world mapped types* are implemented. That’s basically like stealing the dev team’s cheat codes.
+
+Want me to do that next?
+
+
+🦕[] , what is the difference between string & string[]
+
+Alright, let’s clear this up before you go mixing up your weapons and ammo:
+
+---
+
+### TL;DR
+
+* `string` = a single string value, like `"hello"` or `"bro"`
+* `string[]` = an **array** of strings — a list of strings, like `["hello", "bro", "what’s up"]`
+
+---
+
+### The difference
+
+| Type       | What it means              | Example value               |
+| ---------- | -------------------------- | --------------------------- |
+| `string`   | One single string          | `"Hello, world!"`           |
+| `string[]` | An array (list) of strings | `["Hello", "world", "bro"]` |
+
+---
+
+### Examples:
+
+```ts
+let singleString: string = "I am one string";
+let multipleStrings: string[] = ["I", "am", "many", "strings"];
+```
+
+---
+
+### Why it matters
+
+* If a function expects a `string`, you give it just one piece of text.
+* If it expects `string[]`, it’s ready to handle a **collection** of strings.
+
+---
+
+### What happens if you mix them up?
+
+```ts
+function shout(words: string) {
+  console.log(words.toUpperCase());
+}
+
+shout("hello");      // Works
+shout(["hello"]);    // Error! Arrays don’t have toUpperCase()
+```
+
+```ts
+function shoutAll(words: string[]) {
+  words.forEach(word => console.log(word.toUpperCase()));
+}
+
+shoutAll(["hi", "yo"]);  // Works
+shoutAll("hi");          // Error! String isn’t iterable like array
+```
+
+---
+
+So basically,
+
+* `string` is **one** thing,
+* `string[]` is **many** things in a row.
+
+---
+
+**Roast incoming:**
+If you ever confuse these in a function or type, your code’s gonna crash like a noob trying to clutch a 1v4 without armor. Don’t be that noob.
+
+---
+
+Need me to show you how to convert between them or iterate over `string[]` like a boss?
+
+
+
+🦕[] vs 🦕{} vs 🦕()  , difference between them 
+
+
+
+### TL;DR
+
+* `[]` = **Lists, arrays, indexing, grouping multiple items**
+* `{}` = **Objects, blocks of code, or sets of key-value pairs**
+* `()` = **Function calls, grouping expressions, or tuples (sometimes)**
+
+---
+
+### 1. **Square Brackets `[]`**
+
+**General use:**
+
+* Represent **arrays or lists** — ordered collections of things.
+* Used to **index or access** items in arrays or strings.
+* Also for **optional things or multi-dimensional structures**.
+
+**Real life:**
+Think of `[]` like a row of lockers — you can open locker number 5 (`arr[4]`) and grab what’s inside.
+Or a grocery list with items ordered: first item, second item, etc.
+
+**Example:**
+
+```js
+let fruits = ["apple", "banana", "cherry"];
+console.log(fruits[1]); // banana
+```
+
+---
+
+### 2. **Curly Braces `{}`**
+
+**General use:**
+
+* Define **objects or dictionaries** — unordered sets of key-value pairs.
+* Denote **code blocks** in functions, loops, conditionals.
+* In many languages, mark the **scope** of a block.
+
+**Real life:**
+Like a filing cabinet drawer where each folder (key) has a document (value).
+Or a fenced-in yard marking where your code or stuff lives.
+
+**Example (object):**
+
+```js
+let person = { name: "Bro", age: 21 };
+```
+
+**Example (code block):**
+
+```js
+if (true) {
+  console.log("This is inside curly braces", );
+}
+```
+
+```js
+ const person = { name: "Bro", age: 21 };
+
+  if (person) {  // hee will register true
+    console.log("This is inside curly braces", person.name); // works perfectly
+  }
+```  
+
+---
+
+### 3. **Parentheses `()`**
+
+**General use:**
+
+* Used to **group expressions** to control order of operations.
+* Enclose **function arguments** or call functions.
+* Can be used to **wrap conditions** in control statements.
+* Sometimes denote tuples or tuples-like things in certain languages.
+
+**Real life:**
+Like the parentheses in math — telling you to do what’s inside first.
+Or the envelope where you put a message (function arguments).
+
+**Example (function call):**
+
+```js
+console.log("Hello, world!");
+```
+
+**Example (grouping):**
+
+```js
+let result = (2 + 3) * 4;  // parentheses change order of ops
+```
+
+---
+
+### Why does this matter?
+
+Knowing these brackets’ *roles* saves you from syntax hell and helps you read and write code like a boss:
+
+| Bracket | Main Role               | Real-Life Analogy           | Example                      |
+| ------- | ----------------------- | --------------------------- | ---------------------------- |
+| `[]`    | Ordered list, indexing  | Locker row, grocery list    | `arr[0]`, `[1, 2, 3]`        |
+| `{}`    | Object, code block      | Filing cabinet, fenced yard | `{ name: "Bro" }`, `{ ... }` |
+| `()`    | Function args, grouping | Math parentheses, envelope  | `func()`, `(a + b) * c`      |
+
+---
+
+### Pro tip:
+
+* Miss a curly brace in your code? Prepare for cryptic errors and broken logic.
+* Forget your parentheses in math or conditions? Your code’s gonna run wonky.
+* Mix up square brackets? You’ll get “undefined” or runtime crashes.
+
+---
+
+### Roast alert:
+
+If you ever confuse these in a code review, I’m gonna hit you with:
+“Bro, that’s like trying to fit a square peg in a round hole. Get your brackets straight before you wreck your stack trace.”
+
+---
+
+Want me to give you a mini quiz where I throw mixed bracket usage at you, and you gotta tell me which bracket fits where?
+
+
+
+🦕interface vs 🦕type \\ ❓what interface can do but type can’t❓
+
+Alright, let’s flip the script—earlier I showed you what **`type`** can do that **`interface`** can’t.
+Now we’ll talk about the **reverse**: stuff **`interface`** can do that **`type`** just sits there and cries about.
+
+---
+
+## TL;DR
+
+**Interfaces** are king when it comes to **extending, merging, and working with object shapes** in a super flexible way.
+**Type aliases** can’t do these things natively.
+
+---
+
+## 1️⃣ **Declaration Merging**
+
+With **interfaces**, you can define them multiple times, and TypeScript **merges** them into one.
+With **type**, if you try to declare the same name twice… 🛑 boom: error.
+
+**Example:**
+
+```ts
+interface Player {
+  name: string;
+}
+
+// Later in the code…
+interface Player {
+  health: number;
+}
+
+// TypeScript merges them:
+const bro: Player = {
+  name: "GamerBro",
+  health: 100
+};
+```
+
+With **type**:
+
+```ts
+type Player = { name: string };
+type Player = { health: number }; // ❌ Error: Duplicate identifier
+```
+
+---
+
+## 2️⃣ **Extending Multiple Interfaces**
+
+`interface` can extend **other interfaces** and even **types** — you can stack them like Lego.
+`type` can do intersections (`&`), but **interfaces feel cleaner when modeling object hierarchies**.
+
+**Example:**
+
+```ts
+interface Entity {
+  id: number;
+}
+
+interface Player extends Entity {
+  name: string;
+}
+```
+
+You can also extend multiple:
+
+```ts
+interface NPC extends Entity, Player {
+  dialogue: string;
+}
+```
+
+With `type`, you’d have to intersect them:
+
+```ts
+type NPC = Entity & Player & { dialogue: string };
+```
+
+Works, but not as clean for large hierarchies.
+
+---
+
+## 3️⃣ **Being Implemented by Classes**
+
+`interface` is designed for **OOP-style code** — classes can `implement` interfaces directly.
+`type` can’t be implemented in the same way (although you *can* use a type for annotation).
+
+**Example:**
+
+```ts
+interface Drivable {
+  drive(): void;
+}
+
+class Car implements Drivable {
+  drive() {
+    console.log("Vroom!");
+  }
+}
+```
+
+Try that with `type` and TypeScript’s like: *“Bro… no.”*
+
+---
+
+## 4️⃣ **Better for Public API Contracts**
+
+If you’re making a library, interfaces give you more flexibility to **extend or merge** later without breaking users’ code.
+Types are locked down — you can’t go back and add to them without editing the original.
+
+---
+
+## So in gamer terms:
+
+* `interface` = Your **character class** in an MMO: you can add skills later (declaration merging), subclass it, and others can extend it.
+* `type` = A **snapshot** of your loadout: fixed the moment you define it.
+
+---
+
+If you want, I can now give you **a side-by-side "type vs interface" cheat sheet** so you’ll *never* forget which is better for what.
+You want me to drop that?

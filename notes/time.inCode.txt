@@ -1,0 +1,71 @@
+
+---
+
+### 1. **Compile Time**
+
+**When?** Before your app even runs, while it’s being turned from code you write into code the machine understands.
+**In simple terms:** This is like when you pre-order your gaming PC parts and assemble them *before* you start gaming. If you screw up here (like wrong parts or incompatible RAM), you find out *before* playing.
+
+**Analogy:**
+Imagine baking cookies. Compile time is like reading the recipe, prepping the dough, and preheating the oven before you actually bake.
+
+---
+
+### 2. **Run Time (Execution Time)**
+
+**When?** When your program actually runs — the player pressing "Start Game" and the game launching.
+**In simple terms:** This is the actual *game session* where all the logic, events, and actions happen.
+
+**Analogy:**
+This is when you’re actually playing the game. Your code is doing its job — moving characters, calculating scores, loading levels, etc.
+
+---
+
+### 3. **Load Time**
+
+**When?** Right after compile time, when your program or app loads into memory before it starts running.
+**In simple terms:** Like loading assets and resources, so your game world is ready to roll.
+
+**Analogy:**
+Imagine you’re loading a game level — all the textures, models, and sounds are being loaded before you actually see or play it.
+
+---
+
+### 4. **Build Time**
+
+**When?** This is the whole process that turns your source code into a runnable app, including compile time and linking.
+**In simple terms:** Like crafting the entire game executable or app package before you ship it to players.
+
+**Analogy:**
+Like when a game studio takes all the art, code, sounds, and levels, and packages them into a final game installer or app you download.
+
+---
+
+### 5. **Design Time**
+
+**When?** When you’re just writing your code, designing the structure and features, before anything runs or compiles.
+**In simple terms:** Planning your game mechanics or app features on paper or in your head.
+
+**Analogy:**
+Sketching out your game concept, story, or levels before any coding starts.
+
+---
+
+### TL;DR
+
+* **Design Time:** You plan and write your code (like planning your game).
+* **Build Time:** The whole process to create the app executable (putting the game together).
+* **Compile Time:** Code gets translated into machine language (assembling your PC parts).
+* **Load Time:** Game or app loads resources into memory (loading game levels).
+* **Run Time:** The program is running and doing its thing (actually playing the game).
+
+---
+
+### Tips & Tricks
+
+* Understanding these times helps debug better: e.g., **compile-time errors** = syntax/typing mistakes, **run-time errors** = bugs during play.
+* For web apps: run time is when your JS code actually executes in the browser, load time is when the page and scripts load.
+* If you mix up compile time and run time, you might waste hours debugging what’s actually just a typo (looking at you, semicolon warriors).
+
+---
+

@@ -1,0 +1,14 @@
+##step 1
+Step 1 — Quick recap
+
+Signup: ✅ hashed password, saved in DB
+Login: ❌ we fix TypeScript + check password
+Now: 🟢 JWT token generation + simple protected route
+
+##step 2
+Install JWT lib (if you haven’t)
+npm install jsonwebtoken
+npm i -D @types/jsonwebtoken
+
+## step 3
+Simple login controller (JWT Access Token only for now)

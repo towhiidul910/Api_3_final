@@ -1,0 +1,113 @@
+Alright, here’s a **TypeScript Classes Cheat Sheet**—one glance, no fluff, straight to the point. Perfect for notes.
+
+---
+
+# **TypeScript Classes Cheat Sheet**
+
+### **1️⃣ Basic Class Syntax**
+
+```ts
+class ClassName {
+  property1: type;       // public by default
+  private property2: type; // accessible only inside class
+  readonly property3: type; // read-only, cannot modify after init
+
+  constructor(p1: type, p2: type, p3: type) {
+    this.property1 = p1;
+    this.property2 = p2;
+    this.property3 = p3;
+  }
+
+  methodName() {
+    // can access private and readonly
+    return `${this.property1} ${this.property2} ${this.property3}`;
+  }
+}
+```
+
+---
+
+### **2️⃣ Constructor Shorthand**
+
+```ts
+class Class2 {
+  constructor(
+    private prop2: string,
+    public prop1: number,
+    readonly prop3: string
+  ) {}
+
+  method() {
+    return `${this.prop1} ${this.prop2} ${this.prop3}`;
+  }
+}
+```
+
+* `private/public/readonly` in constructor = auto property
+* Cleaner, less boilerplate
+
+---
+
+### **3️⃣ Access Modifiers**
+
+| Modifier   | Where accessible  | Can reassign?                 |
+| ---------- | ----------------- | ----------------------------- |
+| `public`   | Anywhere          | ✅ yes                         |
+| `private`  | Only inside class | ✅ yes inside class, ❌ outside |
+| `readonly` | Anywhere          | ❌ cannot modify               |
+
+---
+
+### **4️⃣ Example Usage**
+
+```ts
+const inv1 = new Invoice("Mario", "Website work", 250, "Ice & Fire");
+const inv2 = new Invoice("Luigi", "Website work", 300, "Lord of the Ring");
+
+inv1.client = "Yoshi";   // ✅ allowed
+// inv1.details = "Hack"; // ❌ private
+// inv1.book = "Harry";   // ❌ readonly
+```
+
+---
+
+### **5️⃣ Arrays of Class Instances**
+
+```ts
+const invoices: Invoice[] = [];
+invoices.push(inv1, inv2);
+
+invoices.forEach(inv => {
+  console.log(inv.format()); // access private safely via method
+});
+```
+
+---
+
+### **6️⃣ Classes vs Functions**
+
+```ts
+function inv(c: string, d: string, a: number) {
+  return `${c} owes $${a} for ${d}`;
+}
+```
+
+* Functions: lightweight, no encapsulation
+* Classes: structure, access control, methods
+* Don’t mix for same logic; choose one
+
+---
+
+### **7️⃣ TL;DR Rules**
+
+1. **Use private + readonly** for controlled access.
+2. **Constructor shorthand** = cleaner, fewer lines.
+3. **Methods** can access private properties; outside code cannot.
+4. Arrays of class instances = type safety.
+5. Keep naming consistent (`inv1` ≠ `invoiceOne`).
+
+---
+
+If you want, I can also make an **ultra-mini visual version** with **icons & arrows** that’s like a “one-page memory hack” for classes—it’ll stick way faster.
+
+Do you want me to make that too?

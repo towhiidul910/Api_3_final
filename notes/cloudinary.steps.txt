@@ -1,0 +1,52 @@
+//
+step 0 : create account with getHub
+step1 : install : npm i cloudinary
+
+c name: dwzcseaxg
+api key: 779894786866838
+api secret : KZTlhV0H-NWL7hOOI9Qt-YLPE9E
+API environment variable : CLOUDINARY_URL=cloudinary://779894786866838:KZTlhV0H-NWL7hOOI9Qt-YLPE9E@dwzcseaxg
+
+
+// in production we dont stor the image in local storage
+
+
+server/
+ └── src/
+      ├── config/
+      │     └── cloudinary.ts
+      │
+      ├── middleware/
+      │     └── upload.ts        (your multer config)
+      │
+      ├── controllers/
+      │     └── upload.controller.ts
+      │
+      ├── routes/
+      │     └── upload.routes.ts
+      │
+      ├── uploads/
+      │     └── user/images/     (local disk storage)
+      │
+      └── utils/
+            └── AppError.ts
+
+
+Do you want to:
+A) Add pagination & performance improvements
+B) Add image transformations for gallery
+C) Add auth protection so users can’t delete others' images
+
+// frontend learn 
+You’re learning:
+
+File upload UX
+Preview before upload
+Multiple image selection
+Gallery rendering
+Delete button per image
+Optimistic UI updates
+Loading states
+Error states
+
+This is where backend becomes real
