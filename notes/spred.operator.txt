@@ -1,0 +1,88 @@
+`...` is the **spread operator** in this case. It takes items out of an iterable like an array and places them one by one into a new array.
+
+Example:
+
+```ts
+const a = [1, 2];
+const b = [3, 4];
+
+const c = [...a, ...b]; // [1, 2, 3, 4]
+```
+
+Without spread:
+
+```ts
+const c = [a, b]; // [[1, 2], [3, 4]]
+```
+
+In your code:
+
+```ts
+setFiles((prev) => [...prev, ...newFiles])
+```
+
+this means:
+
+1. `setFiles(...)`
+   React state update function for `files`.
+
+2. `(prev) => ...`
+   A function that React calls with the previous state value.
+   Here `prev` means the current old `files` array.
+
+3. `[...prev, ...newFiles]`
+   Create a brand new array.
+   Put all old files from `prev` into it.
+   Then put all files from `newFiles` into it.
+
+So if:
+
+```ts
+prev = [file1, file2]
+newFiles = [file3, file4]
+```
+
+then:
+
+```ts
+[...prev, ...newFiles]
+```
+
+becomes:
+
+```ts
+[file1, file2, file3, file4]
+```
+
+If you wrote this instead:
+
+```ts
+[...prev, newFiles]
+```
+
+then result would be:
+
+```ts
+[file1, file2, [file3, file4]]
+```
+
+That is wrong for `File[]`, because the last item is an array, not a `File`.
+
+So the full meaning of:
+
+```ts
+setFiles((prev) => [...prev, ...newFiles])
+```
+
+is:
+
+“Take the previous files, add the newly selected files to them, and save that as the new state.”
+
+Short version:
+- `prev` = old state
+- `=>` = returns new state
+- `...prev` = unpack old files
+- `...newFiles` = unpack new files
+- whole line = merge both arrays into one new array
+
+If you want, I can also explain why React uses `(prev) => ...` instead of just `setFiles([...files, ...newFiles])`.

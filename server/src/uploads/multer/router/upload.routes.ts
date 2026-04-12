@@ -22,6 +22,7 @@ import {
   uploadCloudinaryController,
   uploadGalleryController,
 } from "../../cloudinary/controller/cloudinary.controller";
+import { accessMiddleware } from "../../../middlewares/auth/auth.middlewhere.service";
 
 const router = express.Router();
 
@@ -109,7 +110,10 @@ router.delete(
 
 router.post(
   "/createGImagesController",
+  accessMiddleware,
   upload.array("image", 10),
   createGImagesController,
 );
+
+
 export default router;

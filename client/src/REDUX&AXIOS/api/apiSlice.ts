@@ -10,6 +10,10 @@ type UserProfile = {
   email: string;
   createAt: Date;
 };
+type UploadGalleryResponse = {
+  message: string;
+  cloudUrls: string[];
+};
 
 type UserProfileWithAvatar = {
   // res.json(user) // in server user = {id: , name: ... etc} so {id: , name: ... etc}
@@ -31,7 +35,7 @@ type Signup = {
 export const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithRefresh,
-  tagTypes: ["UserProfile"],
+  tagTypes: ["UserProfile", "User"],
   endpoints: (builder) => ({
     loadUserProfile: builder.query<UserProfile, void>({
       query: () => "/user/load-user-profile",
@@ -102,6 +106,16 @@ export const api = createApi({
         body,
       }),
     }),
+
+    // ---- the query
+     uploadGalleryImages: builder.mutation<UploadGalleryResponse, FormData>({
+      query: (formData) => ({
+        url: "/upload/createGImagesController",
+        method: "POST",
+        body: formData
+      }), 
+      invalidatesTags: ["User"]
+    })
   }),
 });
 
@@ -115,6 +129,8 @@ export const {
   useLoginConfirmMutation,
   useResendLoginOTPMutation,
   useGetUserByEmailQuery,
+  // --- query's
+  useUploadGalleryImagesMutation
 } = api;
 
 // body → req.body

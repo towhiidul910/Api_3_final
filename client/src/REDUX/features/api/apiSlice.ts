@@ -10,6 +10,11 @@ type ServerUser = {
   verified: string;
 };
 
+type UploadGalleryResponse = {
+  message: string;
+  cloudUrls: string[];
+};
+
 type GetAllUsersResponse = {
   verifiedUsers: ServerUser[];
   unVerifiedUsers: ServerUser[];
@@ -101,6 +106,15 @@ export const apiR = createApi({
       },
       invalidatesTags: ["User"],
     }),
+
+    uploadGalleryImages: builder.mutation<UploadGalleryResponse, FormData>({
+      query: (formData) => ({
+        url: "/upload/createGImagesController",
+        method: "POST",
+        body: formData
+      }), 
+      invalidatesTags: ["User"]
+    })
   }),
 });
 
@@ -110,7 +124,8 @@ export const {
   useUploadAvatarMutation,
   useUploadAvatarDeletePrevMutation,
   useGetProfileQuery,
-  useUploadAvatarProgressMutation
+  useUploadAvatarProgressMutation,
+  useUploadGalleryImagesMutation
 } = apiR;
 
 //! questions

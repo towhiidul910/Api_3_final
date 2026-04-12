@@ -516,16 +516,31 @@ export const createGImagesController: RequestHandler = async (
     const { email } = req.body;
     const files = req.files as Express.Multer.File[];
 
-    if (!files || files.length === 0 || !email)
-      throw new AppError("Upload Gallery", "user or files problem", 400);
+    if (!files || files.length === 0) {
+      throw new AppError("Upload Gallery", "No files uploaded", 400);
+    }
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    const user = req.user?.id
+      ? await prisma.user.findUnique({
+          where: { id: req.user.id },
+        })
+      : email
+        ? await prisma.user.findUnique({
+            where: { email },
+          })
+        : null;
+
+    if (!req.user?.id && !email) {
+      throw new AppError(
+        "Upload Gallery",
+        "Authentication required or email missing",
+        401,
+      );
+    }
 
     if (!user) throw new AppError("Upload Gallery", "user not found", 404);
 
-    const maxOrder = await prisma.gImage.aggregate({
+    const maxOrder = await prisma.gImage.aggregate({ // maxOrder does not count how many photos exist. It finds the highest existing order value // https://chatgpt.com/s/t_69d9ba8d72008191bd1d7eaf87c8b0a7
       where: { userId: user.id },
       _max: { order: true },
     });
@@ -535,14 +550,14 @@ export const createGImagesController: RequestHandler = async (
 
     const uploadResults = await Promise.allSettled(
       files.map(async (file, index) => {
-        const result = await cloudinary.uploader.upload(file.path, {
+        const result = await cloudinary.uploader.upload(file.path, { 
           folder: `users/${user.id}/gallery`,
         });
 
         // delete temp file
         await fs.unlink(file.path);
         // save in DB
-        const image = prisma.gImage.create({
+        const image = await prisma.gImage.create({
           data: {
             imageUrl: result.secure_url,
             imagePublicId: result.public_id,
@@ -551,8 +566,10 @@ export const createGImagesController: RequestHandler = async (
           },
         });
 
-       
-        return image
+        return {
+          image,
+          cloudUrl: result.secure_url,
+        };
       }),
     );
 
@@ -574,7 +591,7 @@ export const createGImagesController: RequestHandler = async (
     if (allImages.length > 10) {
       const imageToDelete = allImages.slice(10);
 
-      await cloudinary.api.delete_resources(
+      await cloudinary.api.delete_resources( // ["abc123", "def456", "ghi789"]
         imageToDelete.map((img) => img.imagePublicId),
         {
           invalidate: true,
@@ -583,33 +600,40 @@ export const createGImagesController: RequestHandler = async (
 
       // delete the db links
 
-      await prisma.image.deleteMany({
+      await prisma.gImage.deleteMany({
         where: {
-          id: {in: imageToDelete.map((img) => img.id)}
-        }
-      })
+          id: { in: imageToDelete.map((img) => img.id) },
+        },
+      });
     }
 
     const afterImage = await prisma.user.findUnique({
-      where: {id: user.id},
+      where: { id: user.id },
       select: {
         email: true,
         gImages: {
           select: {
-            imageUrl: true
-          }
-        }
-      }
-    })
+            imageUrl: true,
+          },
+          orderBy: {
+            order: "asc",
+          },
+        },
+      },
+    });
 
+    const cloudUrl = successfulUploads.map((item) => item.cloudUrl);
     res.json({
       message: "Gallery upload complete ",
       uploaded: successfulUploads.length,
       failed: failedUploads.length,
       failedDetails: failedUploads,
-      afterImage
-    })
+      afterImage,
+      cloudUrl,
+    });
   } catch (err) {
     next(err);
   }
 };
+
+

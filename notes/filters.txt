@@ -1,0 +1,310 @@
+**Prisma Cheat Sheet**
+
+Here’s a quick cheat sheet for the most common Prisma `where` operators you’ll see.
+
+**Basic Match**
+
+```ts
+where: {
+  id: 5
+}
+```
+
+Means:
+- `id` must equal `5`
+
+---
+
+**Comparison Operators**
+
+```ts
+where: {
+  order: { gt: 5 }
+}
+```
+
+Operators:
+- `equals`: equal to
+- `not`: not equal to
+- `gt`: greater than
+- `gte`: greater than or equal
+- `lt`: less than
+- `lte`: less than or equal
+
+Examples:
+
+```ts
+where: {
+  order: { equals: 3 }
+}
+```
+
+```ts
+where: {
+  order: { not: 3 }
+}
+```
+
+```ts
+where: {
+  order: { gte: 10 }
+}
+```
+
+---
+
+**Array/List Matching**
+
+```ts
+where: {
+  id: { in: [1, 2, 3] }
+}
+```
+
+Means:
+- match rows where `id` is `1`, `2`, or `3`
+
+```ts
+where: {
+  id: { notIn: [1, 2, 3] }
+}
+```
+
+Means:
+- match rows where `id` is not `1`, `2`, or `3`
+
+SQL idea:
+```sql
+WHERE id IN (1,2,3)
+```
+
+---
+
+**Text/String Filters**
+
+```ts
+where: {
+  name: { contains: "john" }
+}
+```
+
+Operators:
+- `contains`: includes this text
+- `startsWith`: begins with this text
+- `endsWith`: ends with this text
+
+Examples:
+
+```ts
+where: {
+  email: { contains: "@gmail.com" }
+}
+```
+
+```ts
+where: {
+  username: { startsWith: "admin" }
+}
+```
+
+```ts
+where: {
+  filename: { endsWith: ".png" }
+}
+```
+
+You can often add case-insensitive mode:
+
+```ts
+where: {
+  name: {
+    contains: "john",
+    mode: "insensitive"
+  }
+}
+```
+
+---
+
+**AND / OR / NOT**
+
+```ts
+where: {
+  AND: [
+    { userId: 1 },
+    { order: { gt: 3 } }
+  ]
+}
+```
+
+Means:
+- both conditions must be true
+
+```ts
+where: {
+  OR: [
+    { id: 1 },
+    { id: 2 }
+  ]
+}
+```
+
+Means:
+- either one can be true
+
+```ts
+where: {
+  NOT: {
+    userId: 1
+  }
+}
+```
+
+Means:
+- exclude rows where `userId = 1`
+
+---
+
+**Null Checks**
+
+```ts
+where: {
+  deletedAt: null
+}
+```
+
+Means:
+- `deletedAt` is null
+
+```ts
+where: {
+  deletedAt: { not: null }
+}
+```
+
+Means:
+- `deletedAt` is not null
+
+---
+
+**Related Records**
+
+Example if an image belongs to a user:
+
+```ts
+where: {
+  user: {
+    id: 5
+  }
+}
+```
+
+Or:
+
+```ts
+where: {
+  user: {
+    email: { contains: "gmail" }
+  }
+}
+```
+
+---
+
+**Useful With Your Code**
+
+If `imageToDelete` is:
+
+```ts
+[
+  { id: 4, imagePublicId: "a1" },
+  { id: 7, imagePublicId: "b2" }
+]
+```
+
+then:
+
+```ts
+imageToDelete.map((img) => img.id)
+```
+
+becomes:
+
+```ts
+[4, 7]
+```
+
+So:
+
+```ts
+id: { in: imageToDelete.map((img) => img.id) }
+```
+
+becomes:
+
+```ts
+id: { in: [4, 7] }
+```
+
+Meaning:
+- match rows whose `id` is either `4` or `7`
+
+---
+
+**Very Common Prisma Examples**
+
+Find one exact record:
+
+```ts
+await prisma.gImage.findMany({
+  where: {
+    userId: user.id
+  }
+})
+```
+
+Find images with order greater than 3:
+
+```ts
+await prisma.gImage.findMany({
+  where: {
+    order: { gt: 3 }
+  }
+})
+```
+
+Delete multiple images by IDs:
+
+```ts
+await prisma.gImage.deleteMany({
+  where: {
+    id: { in: [1, 2, 3] }
+  }
+})
+```
+
+Search URLs containing `cloudinary`:
+
+```ts
+await prisma.gImage.findMany({
+  where: {
+    imageUrl: { contains: "cloudinary" }
+  }
+})
+```
+
+---
+
+**Quick Memory Trick**
+
+- `in` = one of these
+- `notIn` = not one of these
+- `gt` = greater than
+- `gte` = greater than or equal
+- `lt` = less than
+- `lte` = less than or equal
+- `contains` = has this text
+- `startsWith` = begins with
+- `endsWith` = finishes with
+
+If you want, I can make you a second cheat sheet just for `findMany`, `updateMany`, `deleteMany`, `create`, and `aggregate` with examples from your `cloudinary.controller.ts`.

@@ -1,3 +1,4 @@
+// client\src\components\upload\UploadAdvance\UploadAvatar3.tsx
 import { useState, useCallback } from "react";
 import Cropper, { Area } from "react-easy-crop";
 import { useUploadAvatarProgressMutation } from "@/REDUX/features/api/apiSlice";

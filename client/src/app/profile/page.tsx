@@ -10,6 +10,7 @@ import Cropper, { Area } from "react-easy-crop";
 import { Point } from "framer-motion";
 import AvatarTest from "@/components/upload/get/test/AvatarPage.test.";
 import AvatarPageA3 from "@/components/upload/UploadAdvance/UploadAvatar3";
+import GalleryUploader from "@/components/upload/UploadG/UploadGallery";
 
 type User = {
   id: string;
@@ -59,6 +60,9 @@ export default function UserProfile() {
 
       <AvatarTest/>
       <AvatarPageA3/>
+
+      <h1>Gallery Upload</h1>
+      <GalleryUploader/>
     </div>
   );
 }

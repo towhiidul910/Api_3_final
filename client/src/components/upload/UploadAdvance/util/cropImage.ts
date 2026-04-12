@@ -1,3 +1,4 @@
+// client\src\components\upload\UploadAdvance\util\cropImage.ts
 export default async function getCroppedImg(
   imageSrc: string,
   pixelCrop: { x: number; y: number; width: number; height: number },

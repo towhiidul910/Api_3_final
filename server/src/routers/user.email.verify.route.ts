@@ -125,6 +125,7 @@ router.post(
   resendOutboxLoginController,
 );
 
+
 //----------Protected Rout------// don't need second ValidateR, it doesn't come from user
 router.get("/load-user-profile", accessMiddleware, userProfile);
 
