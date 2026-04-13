@@ -5,64 +5,11 @@ import { useState } from "react"
 
 
 
-// export default function GalleryUploadPage () {
-//     const [UploadGallery] = useUploadGalleryImagesMutation()
-//     const [files, setFiles] = useState<File[]>([]);
-
-//     // store preview URL's
-//     const [previews, setPreview] = useState<string[]>([])
-
-//     const [loading, setLoading] = useState(false);
-
-//     // handle file input
-//     const handleFiles = (fileList: FileList) => {
-//         const newFiles = Array.from(fileList);
-
-//         // limit to 10 (match backend)
-
-//         if (files.length + newFiles.length > 0) {
-//             alert("Max 10 image allowed");
-//             return
-//         }
-
-//         // store files
-//         setFiles((prev) => [...prev, ...newFiles]);
-
-//         // create preview URLs
-//         const newPreviews = newFiles.map((file) => URL.createObjectURL(file))
-
-//         setPreview((prev) => [...prev, ...newPreviews]);
-//     };
-
-//     // remove image before upload
-//     const removeImage = (index: number) => {
-//         setFiles((prev) => prev.filter((_, i) => i !== index) )
-
-//         setPreview((prev) => {
-//             URL.revokeObjectURL(prev[index]);
-//             return prev.filter((_, i) => i !== index)
-//         });
-//     }
-
-//     const uploadImage = async () => {
-//         if (files.length === 0) return alert("No image selected");
-
-//         try {
-//             setLoading(true);
-//             const formData = new FormData();
-            
-//             // Important: must match backend key "image"
-//         }
-//     }
-// }
-
-
-
 export default function GalleryUploader () {
-    //
+    
     const [uploadGalleryImages,  { isLoading }] = useUploadGalleryImagesMutation();
 
-    const [files, setFiles] = useState<File[]>([]);;
+    const [files, setFiles] = useState<File[]>([])
     const [previews, setPreviews] = useState<string[]>([])
 
     // Handle file section
@@ -84,7 +31,7 @@ export default function GalleryUploader () {
 
     // Remove single image before upload
     const removeImage = (index: number) => {
-        setFiles((prev) => prev.filter((_, i) => i !== index));
+        setFiles((prev) => prev.filter((_, i) => i !== index)); // prev is the current stored array of file objects
 
         setPreviews((prev) => {
             URL.revokeObjectURL(prev[index]); 
@@ -149,4 +96,32 @@ x
 
 
 
-// 
+// import stuff
+// import mutation and const it , import right one because baseQuery matter in redux and for auth
+// setFiles : it stores the the actual image files selected by the user.
+// setPreview : it store the link of the image after the image in memory url
+
+
+//* handle file:
+// why: it takes the file form html input type="file" element and store in to setFiles. and turn the file into mamore url because so the imc can show it becasue image element cant show the image directly it needs url. and set the urls in the setPReviews
+
+
+//* removeImage : 
+// why: the remove image is insert in the image div that contain the image and also have the access ot the index of the image previews (URL), 
+// so the removeImage takes the index as parameter , 
+// insetFiles 
+
+
+//* setFiles((prev) => prev.filter((_, i) => i !== index)); : explained here: notes\filter&inside.function.note.js
+
+//* handleUpload :
+// if length is false then return
+// formData : notes\form&file.txt
+// then for each file because the input type = "file" let the user choose more then one image
+// then well append every file in the formData
+// well append other thing if needed
+
+// then well try to upload with the formdata and take response (do ever we wanna do with res)
+// then after uploading well setJFiles and previews empty
+
+//* then the html

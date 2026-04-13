@@ -637,3 +637,13 @@ export const createGImagesController: RequestHandler = async (
 };
 
 
+// export const getUserGalleryController2: RequestHandler = async (
+//   req, res, next
+// ) => {
+//   try {
+//     const {email} = req.body
+//     if (!email) throw new AppError("Upload Avatar", "user email required", 400);
+    
+//     const user = 
+//   } catch (err) {}
+// }
