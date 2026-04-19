@@ -91,6 +91,11 @@ export const bodyLoginSchema = z.object({
   body: loginSchema,
 });
 
+export const getGallerySchema = z.object({
+  params: z.object({
+    id: z.string(), // or z.string().uuid() if using uuid
+  }),
+});
 
 export const loadUserProfileSchema = z.object({
   headers: z.object({
@@ -133,6 +138,12 @@ export const refreshTokenSchema = z.object({
 export const sessionSchema = z.object({
   expiresAt: z.date(),
 });
+
+export const imageGDeleteParamSchema = z.object({
+  params: z.object({
+    imageId: stringField("imageId")
+  })
+})
 
 export const testSchema = z.object({
   body: z.object({

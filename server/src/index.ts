@@ -16,7 +16,7 @@ import userRouterV from "./routers/test/user.verify.route";
 import session from "express-session";
 import userERouter from "./routers/user.email.verify.route";
 import { startOutboxCron } from "./cron/outbox.cron";
-import uploadRouters from "./uploads/multer/router/upload.routes";
+import uploadRouters from "./routers/uploads/upload.routes"
 import path from "node:path";
 // import { processOutbox } from "./controllers/user.email.verify.controller";
 

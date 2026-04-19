@@ -613,7 +613,9 @@ export const createGImagesController: RequestHandler = async (
         email: true,
         gImages: {
           select: {
+            id: true,
             imageUrl: true,
+            order: true
           },
           orderBy: {
             order: "asc",
@@ -637,13 +639,77 @@ export const createGImagesController: RequestHandler = async (
 };
 
 
-// export const getUserGalleryController2: RequestHandler = async (
-//   req, res, next
-// ) => {
-//   try {
-//     const {email} = req.body
-//     if (!email) throw new AppError("Upload Avatar", "user email required", 400);
+export const getGalleryImageController: RequestHandler = async (req, res, next) => {
+  try {
+    const id = req.user?.id // this will come from accessMiddleware , we add the user.id there and using it here
+  
+    if (!id) throw new AppError("Upload Gallery", "user id missing / unauthorized", 404)
+
+    const user = await prisma.user.findUnique({
+      where: {id},
+      include: {
+        gImages: {
+          select: {
+            id: true,
+            imageUrl: true,
+            order: true
+          },
+          orderBy: {order: "asc"}
+        }
+      }
+    })
+
     
-//     const user = 
-//   } catch (err) {}
-// }
+
+    if (!user) throw new AppError("Upload Gallery", "User not found", 404)
+
+      const userDTO = {
+      name: user.name,
+      email: user.email,
+      images: user.gImages.map(img => ({
+        id: img.id,
+        imageUrl: img.imageUrl,
+        order: img.order
+      }))
+    }
+
+    // res.json(user?.gImages)
+    res.json(userDTO)
+
+  } catch (err) {next(err)}
+}
+
+export const deleteGalleryImageController: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = req.user?.id
+    // const {imageId} = req.validated?.params
+    const {imageId} = req.validated?.params
+    
+    if (!imageId) throw new AppError("Delete Image", "imageId missing", 400);
+
+    if (!userId) {
+      throw new AppError("Gallery", "Unauthorized", 401)
+    }
+
+    // 1 find image (security check)
+    const image = await prisma.gImage.findUnique({
+      where: {id: imageId},
+    })
+
+    if (!image || image.userId !== userId) {
+      throw new AppError("Gallery", "Image not found", 404);
+    } 
+
+    // delete from cloudinary 
+    await cloudinary.uploader.destroy(image.imagePublicId)
+
+    // delete from db
+    await prisma.gImage.delete({
+      where: {
+        id: imageId
+      }
+    })
+    
+    res.json({message: "Image deleted"}) 
+  } catch (err) {next(err)}
+}

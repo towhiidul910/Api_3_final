@@ -11,6 +11,8 @@ import { Point } from "framer-motion";
 import AvatarTest from "@/components/upload/get/test/AvatarPage.test.";
 import AvatarPageA3 from "@/components/upload/UploadAdvance/UploadAvatar3";
 import GalleryUploader from "@/components/upload/UploadG/UploadGallery";
+import UserGalleryPage from "@/components/upload/get/UserGalleryImage";
+import GalleryWithRecorder from "@/components/upload/UploadG/uploadGDND";
 
 type User = {
   id: string;
@@ -63,6 +65,10 @@ export default function UserProfile() {
 
       <h1>Gallery Upload</h1>
       <GalleryUploader/>
+      <h1>Gallery Images</h1>
+      <UserGalleryPage/>
+      <h1>DND Gallery uploader</h1>
+      <GalleryWithRecorder/>
     </div>
   );
 }

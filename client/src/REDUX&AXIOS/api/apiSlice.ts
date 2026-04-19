@@ -15,6 +15,16 @@ type UploadGalleryResponse = {
   cloudUrls: string[];
 };
 
+export type getGalleryImageControllerResponse = {
+  name: string,
+  email: string,
+  images: {
+    id: string,
+    imageUrl: string,
+    order: number
+  }[]
+}
+
 type UserProfileWithAvatar = {
   // res.json(user) // in server user = {id: , name: ... etc} so {id: , name: ... etc}
   // user: { // res.json({user})  // {user =  {id: , name: ... etc}}
@@ -115,6 +125,20 @@ export const api = createApi({
         body: formData
       }), 
       invalidatesTags: ["User"]
+    }),
+    getGalleryImages: builder.query<getGalleryImageControllerResponse, void>({
+      query: () => ({
+        url: "/upload/getGalleryImageController",
+        method: "GET"
+      }),
+      providesTags: ["User"]
+    }),
+    deleteGalleryImage: builder.mutation<void, string>({
+      query: (imageId) => ({
+        url: `/upload/deleteGalleryImageController/${imageId}`,
+        method: "DELETE"
+      }),
+      invalidatesTags: ["User"]
     })
   }),
 });
@@ -130,7 +154,9 @@ export const {
   useResendLoginOTPMutation,
   useGetUserByEmailQuery,
   // --- query's
-  useUploadGalleryImagesMutation
+  useUploadGalleryImagesMutation,
+  useGetGalleryImagesQuery,
+  useDeleteGalleryImageMutation
 } = api;
 
 // body → req.body
