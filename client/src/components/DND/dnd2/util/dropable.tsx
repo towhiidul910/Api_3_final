@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { DndContext, useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -10,6 +10,11 @@ const Draggable = () => {
         id: "box-1"
     });
 
+     const [isMounted, setIsMounted] = useState(false);
+    
+      useEffect(() => {
+        setIsMounted(true);
+      }, []);
     const style = {
         width: 100,
         height: 100,

@@ -317,7 +317,7 @@ export function validate(schema: any) {
               </ul>
             </div>
             <div className="rounded-xl border border-neutral-800 p-4 bg-neutral-900/30">
-              <h4 className="font-semibold">Use <code className="font-mono">'in'</code> when…</h4>
+              <h4 className="font-semibold">Use <code className="font-mono">`in`</code> when…</h4>
               <ul className="list-disc pl-5 text-neutral-300 space-y-1 mt-2 text-sm">
                 <li>Type is <code className="font-mono">unknown</code> and you need to guard by property presence.</li>
                 <li>Working with plain objects / interfaces at runtime.</li>
