@@ -1,0 +1,36 @@
+Optimizing tool selection...Reviewing the upload component to explain the difference between form and file usage.
+
+Read [](file:///c%3A/Users/Towhidul/Documents/Project/Api_3/client/src/components/upload/UploadG/UploadGallery.tsx)
+
+## What “file” means here
+
+- `type="file"` is the HTML file input.
+- It gives you a `FileList` in `e.target.files`.
+- In this component, `handleFiles` converts that list into `File` objects and stores them in the `files` state.
+- Each `File` represents one selected image from the user’s computer.
+
+## What “form” means here
+
+- There is no visible HTML `<form>` element in this component.
+- Instead, the code creates a JavaScript `FormData` object:
+  - `const formData = new FormData();`
+- `FormData` is used to package multiple fields plus binary files together for upload.
+- The code appends each selected file to it:
+  - `formData.append("image", file);`
+- It also appends a regular field:
+  - `formData.append("email", "towhiidul910@gmail.com")`
+
+## Why both are needed
+
+- `file` = the actual image files selected by the user.
+- `form` = the payload container that sends those files and other data to the backend.
+- The backend expects `upload.array("image")`, so each `File` must be appended to `FormData` under the key `"image"`.
+
+## In short
+
+- The file input collects images.
+- The `files` state holds them.
+- `FormData` packages them for upload.
+- `handleUpload()` sends that package via the RTK query mutation.
+
+If you want, I can also explain how the backend uses `upload.array("image")` to read the same `FormData`.
