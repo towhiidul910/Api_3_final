@@ -69,6 +69,7 @@ export default function UserProfile() {
       <UserGalleryPage/>
       <h1>DND Gallery uploader</h1>
       <GalleryWithRecorder/>
+      <h1></h1>
     </div>
   );
 }

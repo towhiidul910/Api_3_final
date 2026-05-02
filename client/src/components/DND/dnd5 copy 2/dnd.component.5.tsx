@@ -27,16 +27,15 @@ const Dnd5Copy2 = () => {
     const map = {} as ItemLocationMap;
     for (const zoneId of dzs) {
       for (const item of zones[zoneId]) {
-        map[item] = zoneId
+        map[item] = zoneId;
       }
     }
 
-    return map
-  }
+    return map;
+  };
 
-  // const [zones, setZones] = useState<ZonesState>(createInitialZones);
   const [zones, setZones] = useState<ZonesState>(() => {
-    if (typeof window === "undefined") return createItemMap(createInitialZones());
+    if (typeof window === "undefined") return createInitialZones();
 
     const stored = localStorage.getItem("zones");
 

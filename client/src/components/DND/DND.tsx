@@ -5,6 +5,10 @@ import Dnd4 from "./dnd4/dnd.component.4";
 import Dnd5 from "./dnd5/dnd.component.5";
 import Dnd5Copy from "./dnd5 copy/dnd.component.5";
 import Dnd5Copy2 from "./dnd5 copy 2/dnd.component.5";
+import Dnd6 from "./dnd6/dnd.component.5";
+import Dnd7 from "./dnd7/sortable.list";
+import Gallery from "./dnd9.gallery/dnd8.gallery.multiZone";
+// import Gallery from "./dnd8.gallery/dnd8.gallery";
 // import Dnd5Copy2 from "./dnd5 copy/dnd.component.5";
 
 const DNDComponent = () => {
@@ -27,6 +31,16 @@ const DNDComponent = () => {
       
       <h1>Dnd5Copy2</h1>
       <Dnd5Copy2 />
+
+
+      <h1>Dnd6</h1>
+      <Dnd6 />
+      <h1>Dnd7</h1>
+      <Dnd7 />
+      
+      <h1>Gallery x</h1>
+      <Gallery />
+
     </div>
   );
 };
