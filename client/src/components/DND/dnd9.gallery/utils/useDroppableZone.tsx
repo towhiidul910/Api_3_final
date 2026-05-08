@@ -5,7 +5,12 @@ export default function DroppableZone({id, children}: {id: string; children: Rea
 
 
     return (
-        <div ref={setNodeRef} className={`p-4 border rounded min-h-[150px] ${isOver ? "bg-blue-100" : ""}`}>
+        <div ref={setNodeRef} className={`
+        p-4 border rounded-xl
+        grid grid-cols-3 gap-3
+        min-h-[300px] 
+        ${isOver ? "bg-blue-50" : "bg-gray"}
+      `}>
             {children}
         </div>
     )

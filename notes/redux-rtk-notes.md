@@ -1,3 +1,5 @@
+[.md cheat sheet](https://claude.ai/share/2a46ae64-130e-434e-b618-9e4834eb3e48)
+
 # Redux & RTK Query — Notes
 
 ---
@@ -25,12 +27,12 @@ Use state and dispatch anywhere in the app
 ```ts
 configureStore({
   reducer: {
-    counter: counterReducer,       // normal slice
-    [api.reducerPath]: api.reducer // RTK Query slice
+    counter: counterReducer, // normal slice
+    [api.reducerPath]: api.reducer, // RTK Query slice
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware) // mandatory for RTK Query
-})
+    getDefaultMiddleware().concat(api.middleware), // mandatory for RTK Query
+});
 ```
 
 > ⚠️ RTK Query **will not work** without the middleware line.
@@ -39,11 +41,11 @@ configureStore({
 
 ## Two Types of Slices
 
-| | Normal Slice | RTK Query Slice |
-|---|---|---|
-| What it handles | UI state / local app state | Server state & cache |
-| Created with | `createSlice` | `createApi` |
-| Example | counter, modal open/close | fetch user, upload image |
+|                 | Normal Slice               | RTK Query Slice          |
+| --------------- | -------------------------- | ------------------------ |
+| What it handles | UI state / local app state | Server state & cache     |
+| Created with    | `createSlice`              | `createApi`              |
+| Example         | counter, modal open/close  | fetch user, upload image |
 
 ---
 
@@ -54,38 +56,47 @@ configureStore({
 **The parts:**
 
 ### `name`
+
 ```ts
-name: "counter"
+name: "counter";
 ```
+
 - Prefixes all action types → `counter/increment`, `counter/decrement`
 - Shows up in Redux DevTools
 - Does **not** control where state lives — that is controlled by the key in `configureStore`
 
 ### `initialState`
+
 ```ts
-initialState: { value: 0 }
+initialState: {
+  value: 0;
+}
 ```
+
 - Redux state must always exist — never `undefined`
 - Same idea as `useState(0)` — just the starting value
 
 ### `reducers`
+
 ```ts
 reducers: {
   increment: (state, action) => { state.value += 1 },
   incrementByAmount: (state, action) => { state.value += action.payload }
 }
 ```
+
 - Each key is a reducer function that handles one type of state change
 - `state` = current state of the slice
 - `action.payload` = optional data sent when dispatching
 
 ### Exports
+
 ```ts
 // action creators — used to dispatch
-export const { increment, decrement, incrementByAmount } = counterSlice.actions
+export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
 // reducer function — stored in configureStore
-export default counterSlice.reducer
+export default counterSlice.reducer;
 ```
 
 ---
@@ -95,53 +106,62 @@ export default counterSlice.reducer
 **Why:** Handles all server communication — fetching, caching, invalidating — automatically.
 
 ### `reducerPath`
+
 ```ts
-reducerPath: "api"
+reducerPath: "api";
 ```
+
 - This is the key RTK Query uses internally
 - `api.reducerPath === "api"`
 - Must be stored in the store as `[api.reducerPath]: api.reducer`
 
 ### `api.reducer`
+
 When you call `createApi(...)`, RTK Query auto-generates the whole api object:
+
 ```ts
 api = {
-  reducer,      // ← store this in configureStore
-  middleware,   // ← attach this in middleware
+  reducer, // ← store this in configureStore
+  middleware, // ← attach this in middleware
   endpoints,
-  hooks,        // ← useGetUserQuery, useMutation etc.
-  util
-}
+  hooks, // ← useGetUserQuery, useMutation etc.
+  util,
+};
 ```
 
 ### `tagTypes`
+
 ```ts
-tagTypes: ["UserProfile", "User"]
+tagTypes: ["UserProfile", "User"];
 ```
+
 - Tags are used to link queries and mutations together
 - When a mutation `invalidatesTags: ["User"]` — all queries with `providesTags: ["User"]` automatically re-fetch
 
 ### `endpoints`
+
 Two types of endpoints:
 
 **`builder.query`** — for fetching data (GET)
+
 ```ts
 getGalleryImages: builder.query<ResponseType, void>({
   query: () => ({ url: "/upload/getGalleryImageController", method: "GET" }),
-  providesTags: ["User"]   // re-fetches when "User" tag is invalidated
-})
+  providesTags: ["User"], // re-fetches when "User" tag is invalidated
+});
 ```
 
 **`builder.mutation`** — for changing data (POST, PUT, DELETE)
+
 ```ts
 uploadGalleryImages: builder.mutation<ResponseType, FormData>({
   query: (formData) => ({
     url: "/upload/createGImagesController",
     method: "POST",
-    body: formData
+    body: formData,
   }),
-  invalidatesTags: ["User"]  // tells all "User" queries to re-fetch
-})
+  invalidatesTags: ["User"], // tells all "User" queries to re-fetch
+});
 ```
 
 ---
@@ -149,14 +169,14 @@ uploadGalleryImages: builder.mutation<ResponseType, FormData>({
 ## Types in Endpoints
 
 ```ts
-builder.query<ResponseType, ArgType>
+builder.query<ResponseType, ArgType>;
 //            ↑              ↑
 //     what comes back    what you pass in
 //     from the server    when calling the hook
 
-builder.query<UserProfile, void>     // no argument needed
-builder.query<UserProfile, string>   // pass a string (e.g. email)
-builder.mutation<{ message: string }, FormData>  // pass FormData, get message back
+builder.query<UserProfile, void>; // no argument needed
+builder.query<UserProfile, string>; // pass a string (e.g. email)
+builder.mutation<{ message: string }, FormData>; // pass FormData, get message back
 ```
 
 ---
@@ -167,10 +187,10 @@ builder.mutation<{ message: string }, FormData>  // pass FormData, get message b
 query: (body) => ({
   url: "/some/endpoint",
   method: "POST",
-  body,     // → req.body   in Express
-  params,   // → req.query  in Express
-  headers,  // → req.headers in Express
-})
+  body, // → req.body   in Express
+  params, // → req.query  in Express
+  headers, // → req.headers in Express
+});
 ```
 
 ---
@@ -184,9 +204,9 @@ RTK Query auto-generates hooks from endpoint names:
 // from uploadGalleryImages → useUploadGalleryImagesMutation
 // from deleteGalleryImage → useDeleteGalleryImageMutation
 
-const { data, isLoading } = useGetGalleryImagesQuery()
-const [uploadImages] = useUploadGalleryImagesMutation()
-const [deleteImage] = useDeleteGalleryImageMutation()
+const { data, isLoading } = useGetGalleryImagesQuery();
+const [uploadImages] = useUploadGalleryImagesMutation();
+const [deleteImage] = useDeleteGalleryImageMutation();
 ```
 
 ---
@@ -214,4 +234,28 @@ RTK Query sees "User" tag is dirty
   → automatically re-fetches getGalleryImages
         ↓
 UI updates with fresh data — no manual re-fetch needed
+```
+
+### 🦕splice() : https://claude.ai/share/60bc6e18-454a-481e-9429-ec58fe9358ce
+
+# modifies an array in place by removing, replacing, or inserting elements
+
+Returns: An array of the removed elements
+
+```js
+array.splice(startIndex, deleteCount, item1, item2, ...)
+
+const arr = ['a', 'b', 'c', 'd', 'e'];
+
+// REMOVE
+arr.splice(1, 2);         // removes 'b','c' → arr = ['a','d','e']
+
+// INSERT (no removal)
+arr.splice(2, 0, 'X');    // inserts 'X' at index 2 → arr = ['a','d','X','e']
+
+// REPLACE
+arr.splice(1, 1, 'Z');    // replaces 'd' with 'Z' → arr = ['a','Z','X','e']
+
+// NEGATIVE index
+arr.splice(-1, 1);        // removes last element
 ```

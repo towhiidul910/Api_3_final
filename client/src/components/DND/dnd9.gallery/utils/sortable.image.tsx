@@ -5,13 +5,11 @@ import { GalleryImage } from "../../dnd8.gallery/dnd8.gallery";
 // import { GalleryImage } from "../dnd8.gallery";
 // import { GalleryImage } from "../dnd8.gallery.multiZone";
 
-
 // export type GalleryImage = {
 //     id: string;
 //     imageUrl: string;
 //     order: number
 // }
-
 
 export default function SortableImage({
   image,
@@ -40,25 +38,40 @@ export default function SortableImage({
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <div
+      ref={setNodeRef}
+      className="aspect-square select-none"
+      style={style}
+      {...attributes}
+      {...listeners}>
       {/* images */}
+
       <img
         src={image.imageUrl}
         alt=""
-        className="w-full h-32 object-cover rounded"
+        className="w-full aspect-square object-cover rounded active:cursor-grabbing"
       />
 
       {/* Delete button */}
       <button
-  onClick={(e) => {
-    e.stopPropagation();
-    onDelete(image.id);
-  }}
-  onPointerDown={(e) => e.stopPropagation()} // prevents drag hijack
-  className="absolute top-1.5 right-1.5 bg-red-500 text-white p-1 px-2 cursor-pointer rounded"
->
-  x
-</button>
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete(image.id);
+        }}
+        onPointerDown={(e) => e.stopPropagation()}
+        className="
+    absolute top-1 right-1
+    w-5 h-5
+    flex items-center justify-center
+    bg-black/60 hover:bg-red-500
+    text-white text-sm font-bold
+    rounded-full
+    backdrop-blur
+    transition-all duration-200
+    cursor-pointer
+  ">
+        X
+      </button>
     </div>
   );
 }
