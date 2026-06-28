@@ -199,7 +199,7 @@ export type OutboxEventGroupByOutputType = {
   _max: OutboxEventMaxAggregateOutputType | null
 }
 
-type GetOutboxEventGroupByPayload<T extends OutboxEventGroupByArgs> = Prisma.PrismaPromise<
+export type GetOutboxEventGroupByPayload<T extends OutboxEventGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<OutboxEventGroupByOutputType, T['by']> &
       {
@@ -1145,6 +1145,11 @@ export type OutboxEventFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` OutboxEvents.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of OutboxEvents.
+   */
   distinct?: Prisma.OutboxEventScalarFieldEnum | Prisma.OutboxEventScalarFieldEnum[]
 }
 

@@ -4,6 +4,8 @@ import { AppError } from "../../../utils/AppError";
 import fs from "fs/promises";
 import cloudinary from "../config/cloudinary";
 import prisma from "../../../lib/db";
+import { email } from "zod";
+import be from "zod/v4/locales/be.cjs";
 
 export const getUser: RequestHandler = async (req, res, next) => {
   try {
@@ -540,17 +542,16 @@ export const createGImagesController: RequestHandler = async (
 
     if (!user) throw new AppError("Upload Gallery", "user not found", 404);
 
-    const maxOrder = await prisma.gImage.aggregate({ // maxOrder does not count how many photos exist. It finds the highest existing order value // https://chatgpt.com/s/t_69d9ba8d72008191bd1d7eaf87c8b0a7
+    const maxOrder = await prisma.gImage.aggregate({
+      // maxOrder does not count how many photos exist. It finds the highest existing order value // https://chatgpt.com/s/t_69d9ba8d72008191bd1d7eaf87c8b0a7
       where: { userId: user.id },
       _max: { order: true },
     });
     const startOrder = maxOrder._max.order ?? 0;
 
-   
-
     const uploadResults = await Promise.allSettled(
       files.map(async (file, index) => {
-        const result = await cloudinary.uploader.upload(file.path, { 
+        const result = await cloudinary.uploader.upload(file.path, {
           folder: `users/${user.id}/gallery`,
         });
 
@@ -591,7 +592,8 @@ export const createGImagesController: RequestHandler = async (
     if (allImages.length > 10) {
       const imageToDelete = allImages.slice(10);
 
-      await cloudinary.api.delete_resources( // ["abc123", "def456", "ghi789"]
+      await cloudinary.api.delete_resources(
+        // ["abc123", "def456", "ghi789"]
         imageToDelete.map((img) => img.imagePublicId),
         {
           invalidate: true,
@@ -615,7 +617,7 @@ export const createGImagesController: RequestHandler = async (
           select: {
             id: true,
             imageUrl: true,
-            order: true
+            order: true,
           },
           orderBy: {
             order: "asc",
@@ -638,78 +640,700 @@ export const createGImagesController: RequestHandler = async (
   }
 };
 
-
-export const getGalleryImageController: RequestHandler = async (req, res, next) => {
+export const getGalleryImageController: RequestHandler = async (
+  req,
+  res,
+  next,
+) => {
   try {
-    const id = req.user?.id // this will come from accessMiddleware , we add the user.id there and using it here
-  
-    if (!id) throw new AppError("Upload Gallery", "user id missing / unauthorized", 404)
+    const id = req.user?.id; // this will come from accessMiddleware , we add the user.id there and using it here
+
+    if (!id)
+      throw new AppError(
+        "Upload Gallery",
+        "user id missing / unauthorized",
+        404,
+      );
 
     const user = await prisma.user.findUnique({
-      where: {id},
+      where: { id },
       include: {
         gImages: {
           select: {
             id: true,
             imageUrl: true,
-            order: true
+            order: true,
           },
-          orderBy: {order: "asc"}
-        }
-      }
-    })
+          orderBy: { order: "asc" },
+        },
+      },
+    });
 
-    
+    if (!user) throw new AppError("Upload Gallery", "User not found", 404);
 
-    if (!user) throw new AppError("Upload Gallery", "User not found", 404)
-
-      const userDTO = {
+    const userDTO = {
       name: user.name,
       email: user.email,
-      images: user.gImages.map(img => ({
+      images: user.gImages.map((img) => ({
         id: img.id,
         imageUrl: img.imageUrl,
-        order: img.order
-      }))
-    }
+        order: img.order,
+      })),
+    };
 
     // res.json(user?.gImages)
-    res.json(userDTO)
+    res.json(userDTO);
+  } catch (err) {
+    next(err);
+  }
+};
 
-  } catch (err) {next(err)}
-}
-
-export const deleteGalleryImageController: RequestHandler = async (req, res, next) => {
+export const deleteGalleryImageController: RequestHandler = async (
+  req,
+  res,
+  next,
+) => {
   try {
-    const userId = req.user?.id
+    const userId = req.user?.id;
     // const {imageId} = req.validated?.params
-    const {imageId} = req.validated?.params
-    
+    const { imageId } = req.validated?.params;
+
     if (!imageId) throw new AppError("Delete Image", "imageId missing", 400);
 
     if (!userId) {
-      throw new AppError("Gallery", "Unauthorized", 401)
+      throw new AppError("Gallery", "Unauthorized", 401);
     }
 
     // 1 find image (security check)
     const image = await prisma.gImage.findUnique({
-      where: {id: imageId},
-    })
+      where: { id: imageId },
+    });
 
     if (!image || image.userId !== userId) {
       throw new AppError("Gallery", "Image not found", 404);
-    } 
+    }
 
-    // delete from cloudinary 
-    await cloudinary.uploader.destroy(image.imagePublicId)
+    // delete from cloudinary
+    await cloudinary.uploader.destroy(image.imagePublicId);
 
     // delete from db
     await prisma.gImage.delete({
       where: {
-        id: imageId
-      }
-    })
-    
-    res.json({message: "Image deleted"}) 
-  } catch (err) {next(err)}
-}
+        id: imageId,
+      },
+    });
+
+    res.json({ message: "Image deleted" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const recorderGalleryController: RequestHandler = async (
+  req,
+  res,
+  next,
+) => {
+  try {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      throw new AppError("Gallery", "Unauthorized", 401);
+    }
+
+    const { images } = req.body;
+
+    /* 
+    images = [
+     {id: "abc", order: 0 }
+     {id: "xyz", order: 1 }
+    ]
+    */
+
+    if (!Array.isArray(images)) {
+      throw new AppError("Gallery", "Invalid Image Data", 400);
+    }
+
+    const beforeImage = await prisma.gImage.findMany({
+      where: { userId },
+      select: {
+        imageUrl: true,
+        order: true,
+      },
+      orderBy: { order: "asc" },
+    });
+
+    const afterImages = await prisma.$transaction(
+      images.map((img: { id: string; order: number }) =>
+        prisma.gImage.update({
+          where: {
+            id: img.id,
+          },
+          data: {
+            order: img.order,
+          },
+        }),
+      ),
+    );
+
+    res.json({
+      message: "Gallery reordered",
+      beforeImage,
+      afterImages,
+    });
+    // the before and after Image type
+    // (property) afterImages: {
+    // id: string;
+    // imageUrl: string;
+    // imagePublicId: string;
+    // userId: string;
+    // order: number;
+    // createdAt: Date;
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const recorderGalleryController2: RequestHandler = async (
+  req,
+  res,
+  next,
+) => {
+  try {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      throw new AppError("Gallery", "Unauthorized", 401);
+    }
+
+    const { images } = req.body;
+
+    /* 
+    images = [
+     {id: "abc", order: 0 }
+     {id: "xyz", order: 1 }
+    ]
+    */
+
+    if (!Array.isArray(images)) {
+      throw new AppError("Gallery", "Invalid Image Data", 400);
+    }
+
+    const GImageDTO = await Promise.all(
+      images.map(async (img) => {
+        const before = await prisma.gImage.findUnique({
+          where: { id: img.id },
+          select: {
+            imageUrl: true,
+            order: true,
+          },
+        });
+
+        const reorder = await prisma.gImage.update({
+          where: {
+            id: img.id,
+          },
+          data: {
+            order: img.order,
+          },
+        });
+
+        const after = await prisma.gImage.findFirst({
+          where: { id: img.id },
+          select: {
+            imageUrl: true,
+            order: true,
+          },
+        });
+
+        const user = await prisma.user.findUnique({
+          where: { id: reorder.userId },
+          include: {
+            gImages: {
+              select: {
+                id: true,
+                imageUrl: true,
+                order: true,
+              },
+              orderBy: { order: "asc" },
+            },
+          },
+        });
+
+        if (!after || !user || !before || !reorder) return;
+
+        const DTO = {
+          name: user.name,
+          email: user.email,
+          beforeReOrder: before.order,
+          afterReOrder: after.order,
+          beforeReOrderImagesUrl: before.imageUrl,
+          afterReOrderImagesUrl: after.imageUrl,
+        };
+
+        return DTO;
+      }),
+    );
+
+    res.json({
+      message: "Gallery reordered",
+      GImageDTO,
+    });
+    // the before and after Image type
+    // (property) afterImages: {
+    // id: string;
+    // imageUrl: string;
+    // imagePublicId: string;
+    // userId: string;
+    // order: number;
+    // createdAt: Date;
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const recorderGalleryController3: RequestHandler = async (
+  req,
+  res,
+  next,
+) => {
+  try {
+    const userId = req.user?.id;
+
+    if (!userId) throw new AppError("Gallery", "unauthorized", 401);
+
+    const { images } = req.body;
+    if (!Array.isArray(images) || images.length === 0) {
+      throw new AppError("Gallery", "Invalid Image Data", 400);
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        gImages: {
+          select: { id: true, imageUrl: true, order: true },
+          orderBy: { order: "asc" },
+        },
+      },
+    });
+
+    if (!user) throw new AppError("Gallery", "User not found", 404);
+
+    const userImageIds = new Set(user.gImages.map((img) => img.id));
+    // we dont need it , but im including it so I know thing like this exist
+    const unauthorized = images.some((img) => !userImageIds.has(img.id));
+    if (unauthorized) throw new AppError("Gallery", "Forbidden", 403);
+
+    // 3. Capture "before" state from already-fetching data
+    const beforeMap = new Map(
+      user.gImages.map((img) => [
+        img.id,
+        { order: img.order, imageUrl: img.imageUrl },
+      ]),
+    );
+    // user.gImages = [{id: 1, order: 3, imageUrl: "a.png", size: 200}, same other object...]
+    // .map((img) => [img.id, { order, imageUrl }]) -> This transforms each image object into a [key, value] pair ->
+    {
+      /*
+      user.gImages.map((img) => [img.id, { order: img.order, imageUrl: img.imageUrl }])
+
+       result:
+            [
+              [1, { order: 3, imageUrl: "a.png" }],
+              [same happens to other...]
+            ]
+      */
+    }
+    {
+      /*
+      new Map(...) wraps it
+          Map {
+            1 → { order: 3, imageUrl: "a.png" },
+            2 → { order: 1, imageUrl: "b.png" },
+            3 → { order: 2, imageUrl: "c.png" },
+            }
+          or you can say
+          Map {[[]]}
+      */
+    }
+
+    // 4. Update all in one transaction
+    const updatedImages = await prisma.$transaction(
+      images.map((img) =>
+        prisma.gImage.update({
+          where: { id: img.id },
+          data: { order: img.order },
+          select: { id: true, imageUrl: true, order: true },
+        }),
+      ),
+    );
+
+    const GImageDTO = updatedImages.map((img) => {
+      const before = beforeMap.get(img.id)!;
+
+      return {
+        name: user.name,
+        email: user.email,
+        beforeReorder: before.order,
+        afterReOrder: img.order,
+        beforeReOrderImageUrl: before.imageUrl,
+        afterReOrderImageUrl: img.imageUrl,
+      };
+    });
+
+    res.json({ message: "Gallery reordered", GImageDTO });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// These are fro G Image v2
+
+export const createGImagesV2Controller: RequestHandler = async (
+  req,
+  res,
+  next,
+) => {
+  try {
+    // const { email } = req.body;
+    const files = req.files as Express.Multer.File[];
+
+    const { zone } = req.body as { zone: "zone1" | "zone2" | "zone3" };
+
+    if (!files || files.length === 0)
+      throw new AppError("Upload Gallery v2", "no files uploaded", 400);
+
+    if (!req.user?.id)
+      throw new AppError("Upload Gallery v2", "no id found Auth error", 404);
+    const userId = req.user.id;
+    // const user = await prisma.user.findUnique({
+    //   where: { id: req.user.id },
+    // });
+
+    // if (!user) throw new AppError("Upload Gallery v2", "user not found", 400);
+
+    const maxOrder = await prisma.gImagesV2.aggregate({
+      where: { userId },
+      _max: { order: true },
+    });
+
+    const startOrder = maxOrder._max.order ?? 0;
+
+    await Promise.allSettled(
+      files.map(async (file, index) => {
+        try {
+          const result = await cloudinary.uploader.upload(file.path, {
+            folder: `users/${userId}/gallery`,
+          });
+
+          // save in DB
+          const image = await prisma.gImagesV2.create({
+            data: {
+              imageUrl: result.secure_url,
+              imagePublicId: result.public_id,
+              userId: userId,
+              order: startOrder + index + 1,
+              zone: zone || "zone1",
+            },
+          });
+
+          return {
+            image,
+            cloudUrl: result.secure_url,
+          };
+        } catch (err) {
+          throw err; // Problem: next(err) does NOT stop outer execution  // ✅ Re-throw so Promise.allSettled records it as "rejected"
+        } finally {
+          // delete the temp files
+          await fs.unlink(file.path);
+        }
+      }),
+    );
+
+    const allImages = await prisma.gImagesV2.findMany({
+      where: { userId },
+      orderBy: { order: "desc" },
+    });
+    if (allImages.length > 20) {
+      const imageToDelete = allImages.slice(20);
+
+      await cloudinary.api.delete_resources(
+        imageToDelete.map((img) => img.imagePublicId),
+        {
+          invalidate: true,
+        },
+      );
+
+      // delete the db links
+
+      await prisma.gImagesV2.deleteMany({
+        where: {
+          id: { in: imageToDelete.map((img) => img.id) },
+        },
+      });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        gImagesV2: {
+          select: {
+            id: true,
+            imageUrl: true,
+            order: true,
+            zone: true,
+          },
+          orderBy: { order: "asc" },
+        },
+      },
+    });
+
+    if (!user) throw new AppError("upload Gallery", "User not found", 404);
+
+    const userDTO = {
+      name: user.name,
+      email: user.email,
+      images: user.gImagesV2.map((img) => ({
+        id: img.id,
+        imageUrl: img.imageUrl,
+        order: img.order,
+      })),
+    };
+
+    res.json({
+      userDTO,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteGImageV2Controller: RequestHandler = async (
+  req,
+  res,
+  next,
+) => {
+  try {
+    const userId = req.user?.id;
+
+    const { imageId } = req.validated?.params;
+
+    if (!imageId) throw new AppError("Delete Image", "imageId missing", 400);
+
+    if (!userId) {
+      throw new AppError("Gallery", "Unauthorized", 401);
+    }
+
+    // 1 find image
+    const image = await prisma.gImagesV2.findUnique({
+      where: { id: imageId },
+    });
+
+    if (!image || image.userId !== userId)
+      throw new AppError("Gallery", "Image not found", 404);
+
+    // delete from cloudinary
+    await cloudinary.uploader.destroy(image.imagePublicId);
+
+    // delete from db
+    await prisma.gImagesV2.delete({
+      where: {
+        id: imageId,
+      },
+    });
+
+    res.json({ message: "Image deleted" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// export const recorderGImagesV2Controller: RequestHandler = async (
+//   req,
+//   res,
+//   next,
+// ) => {
+//   try {
+//     const userId = req.user?.id;
+
+//     if (!userId) {
+//       throw new AppError("Gallery", "Unauthorized", 401);
+//     }
+
+//     const { images } = req.body
+
+//     if (!Array.isArray(images)) {
+//       throw new AppError("Gallery", "Invalid Image Data", 400);
+//     }
+
+//     const GImageDTO = await Promise.all(
+//       images.map(async (img) => {
+//         const before = await prisma.gImagesV2.findUnique({
+//           where: { id: img.id },
+//           select: {
+//             imageUrl: true,
+//             order: true,
+//             zone: true,
+//           },
+//         });
+
+//         const recorder = await prisma.gImagesV2.update({
+//           where: { id: img.id },
+//           data: {
+//             order: img.order,
+//             zone: img.zone
+//           },
+//         });
+
+//         const after = await prisma.gImagesV2.findFirst({
+//           where: {id: img.id},
+//           select: {
+//             imageUrl: true,
+//             order: true,
+//             zone: true
+//           }
+//         });
+
+//         const user = await prisma.user.findUnique({
+//           where: {id: recorder.userId},
+//           include: {
+//             gImagesV2: {
+//               select: {
+//                 id: true,
+//                 imageUrl: true,
+//                 order: true
+//               },
+//               orderBy: {order: "asc"}
+//             }
+//           }
+//         });
+
+//         if (!after || !user || !before || !recorder) return
+
+//         const DTO = {
+//           name: user.name,
+//           email: user.email,
+//           beforeReOrder: {
+//             order: before.order,
+//             zone: before.zone,
+//             imgUrl: before.imageUrl
+//           }
+//           ,
+//           afterReOrder: {
+//             order: after.order,
+//             zone: after.zone,
+//             imgUrl: after.imageUrl
+//           }
+//         }
+
+//         return DTO
+//       }),
+//     );
+
+//     res.json({
+//       message: "Gallery reordered",
+//       GImageDTO
+//     })
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
+export const recorderGImageController: RequestHandler = async (
+  req,
+  res,
+  next,
+) => {
+  try {
+    const userId = req.user?.id;
+
+    if (!userId) throw new AppError("Gallery", "unauthorized", 401);
+
+    const { images } = req.body;
+    if (!Array.isArray(images) || images.length === 0) {
+      throw new AppError("Gallery", "Invalid Image Data", 400);
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        gImagesV2: {
+          select: {
+            id: true,
+            imageUrl: true,
+            order: true,
+            zone: true,
+          },
+          orderBy: { order: "asc" },
+        },
+      },
+    });
+
+    if (!user) throw new AppError("Gallery", "User not found", 404);
+
+    const userImageIds = new Set(user.gImagesV2.map((img) => img.id));
+
+    const beforeMap = new Map(
+      user.gImagesV2.map((img) => [
+        img.id,
+        { order: img.order, imageUrl: img.imageUrl, zone: img.zone },
+      ]),
+    );
+
+    const updatedImages = await prisma.$transaction(
+      images.map((img) =>
+        prisma.gImagesV2.update({
+          where: { id: img.id },
+          data: { order: img.order },
+        }),
+      ),
+    );
+
+    const beforeReOrder = updatedImages
+      .map((img) => beforeMap.get(img.id))
+      .filter(
+        (img): img is { order: number; imageUrl: string; zone: string } =>
+          img !== undefined,
+      );
+    if (
+      !beforeReOrder ||
+      beforeReOrder === undefined ||
+      beforeReOrder.length === 0
+    )
+      throw new AppError("Gallery", "before undefine", 404);
+    // if (beforeReOrder.some((img) => img === undefined)) {
+    //   throw new AppError("Gallery", "before undefined", 404);
+    // }
+
+    const GImageDTO = {
+      name: user.name,
+      email: user.email,
+      beforeReOrder: beforeReOrder.map(
+        (img: { order: number; imageUrl: string; zone: string }) => ({
+          order: img.order,
+          zone: img.zone,
+        }),
+      ),
+      afterReOrder: updatedImages.map((img) => ({
+        order: img.order,
+        zone: img.zone,
+      })),
+      reordering: updatedImages.map((img) => {
+        const before = beforeMap.get(img.id)!;
+
+        return {
+          beforeReorderOrder: before.order,
+          afterReOrderOrder: img.order,
+          beforeReOrderImageUrl: before.imageUrl,
+          afterReOrderImageUrl: img.imageUrl,
+          beforeReOrderZone: before.zone,
+          afterReOrderZone: img.zone,
+        };
+      }),
+    };
+
+    res.json({ message: "Gallery reordered", GImageDTO });
+  } catch (err) {
+    next(err);
+  }
+};

@@ -15,14 +15,45 @@ type UploadGalleryResponse = {
   cloudUrls: string[];
 };
 
+type GImageDTO = {
+  name: string;
+  email: string;
+  beforeReorder: number;
+  afterReOrder: number;
+  beforeReOrderImageUrl: string;
+  afterReOrderImageUrl: string;
+};
+type GImageReorderDTOResponse = {
+  message: string;
+  GImageDTO: GImageDTO[];
+};
+
 export type getGalleryImageControllerResponse = {
-  name: string,
-  email: string,
+  name: string;
+  email: string;
   images: {
-    id: string,
-    imageUrl: string,
-    order: number
-  }[]
+    id: string;
+    imageUrl: string;
+    order: number;
+  }[];
+};
+export interface GImage {
+  id: string;
+  imageUrl: string;
+  imagePublicId: string;
+  userId: string;
+  order: number;
+  createdAt: string;
+}
+export interface ReorderGalleryResponse {
+  message: string;
+  beforeImage: GImage[];
+  afterImages: GImage[];
+}
+
+export interface ReorderGalleryArg {
+  id: string;
+  order: number;
 }
 
 type UserProfileWithAvatar = {
@@ -40,6 +71,36 @@ type Signup = {
   name: string;
   email: string;
   password: string;
+};
+
+// ---- direct cloudinary uploader type -------
+type SignedUrlResponse = {
+  data: {
+    timestamp: number;
+    signature: string;
+    folder: string;
+    cloudName: string;
+    apiKey: string;
+  };
+};
+
+type SaveGImagesV2Response = {
+  data: {
+    name: string;
+    email: string;
+    images: {
+      id: string;
+      imageUrl: string;
+      order: number;
+      zone: string;
+      createAt: string;
+    };
+  };
+};
+
+type SaveGImagesV2Arg = {
+  images: { imageUrl: string; imagePublicId: string }[];
+  zone: "zone1" | "zone2" | "zone3";
 };
 
 export const api = createApi({
@@ -118,28 +179,75 @@ export const api = createApi({
     }),
 
     // ---- the query
-     uploadGalleryImages: builder.mutation<UploadGalleryResponse, FormData>({
+    uploadGalleryImages: builder.mutation<UploadGalleryResponse, FormData>({
       query: (formData) => ({
         url: "/upload/createGImagesController",
         method: "POST",
-        body: formData
-      }), 
-      invalidatesTags: ["User"]
+        body: formData,
+      }),
+      invalidatesTags: ["User"],
     }),
     getGalleryImages: builder.query<getGalleryImageControllerResponse, void>({
       query: () => ({
         url: "/upload/getGalleryImageController",
-        method: "GET"
+        method: "GET",
       }),
-      providesTags: ["User"]
+      providesTags: ["User"],
     }),
     deleteGalleryImage: builder.mutation<void, string>({
       query: (imageId) => ({
         url: `/upload/deleteGalleryImageController/${imageId}`,
-        method: "DELETE"
+        method: "DELETE",
       }),
-      invalidatesTags: ["User"]
-    })
+      invalidatesTags: ["User"],
+    }),
+    reorderGallery: builder.mutation<
+      ReorderGalleryResponse,
+      ReorderGalleryArg[]
+    >({
+      query: (images: { id: string; order: number }[]) => ({
+        url: "/upload/recorderGalleryController",
+        method: "PATCH",
+        body: { images },
+      }),
+    }),
+    reorderGallery2: builder.mutation<
+      GImageReorderDTOResponse,
+      ReorderGalleryArg[]
+    >({
+      query: (images) => ({
+        url: "/upload/recorderGalleryController2",
+        method: "PATCH",
+        body: { images },
+      }),
+    }),
+    // --------- direct client cloudinary upload ---------
+    getGallerySignedUrl: builder.query<SignedUrlResponse, void>({
+      query: () => ({
+        url: "/upload/gallery/signed-url",
+        method: "GET",
+      }),
+    }),
+    saveGImageV2: builder.mutation<SaveGImagesV2Response, SaveGImagesV2Arg>({
+      query: (body) => ({
+        url: "/upload/gallery/save",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+    cleanupFailedUploadsController: builder.mutation<
+      { message: string },
+      { publicIds: string[] }
+    >({
+      query: (body) => ({
+        url: `/upload/gallery/failed/cleanup`,
+        method: "DELETE",
+        body,
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -156,7 +264,13 @@ export const {
   // --- query's
   useUploadGalleryImagesMutation,
   useGetGalleryImagesQuery,
-  useDeleteGalleryImageMutation
+  useDeleteGalleryImageMutation,
+  useReorderGalleryMutation,
+  useReorderGallery2Mutation,
+  // -- direct
+  useLazyGetGallerySignedUrlQuery,
+  useSaveGImageV2Mutation,
+  useCleanupFailedUploadsControllerMutation
 } = api;
 
 // notes\redux-rtk-notes.md

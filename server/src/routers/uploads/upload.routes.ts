@@ -22,11 +22,14 @@ import {
   uploadCloudinaryController,
   uploadGalleryController,
   getGalleryImageController,
-  deleteGalleryImageController
+  deleteGalleryImageController,
+  recorderGalleryController,
+  recorderGalleryController2
 }   from "../../uploads/cloudinary/controller/cloudinary.controller";
 import { accessMiddleware } from "../../middlewares/auth/auth.middlewhere.service";
 import { ValidateR } from "../../middlewares/validateByZod/validate.resorce";
 import { getGallerySchema, imageGDeleteParamSchema } from "../../lib/zodSchema/user.schema";
+import { cleanupFailedUploadsController, getGallerySignedUrlController, SaveGImagesV2Controller } from "../../uploads/cloudinary/controller/cloudinary.v2.controller";
 // import { uploadAvatar } from 
 
 
@@ -126,5 +129,32 @@ router.get("/getGalleryImageController", accessMiddleware, getGalleryImageContro
 
 router.delete("/deleteGalleryImageController/:imageId", accessMiddleware, ValidateR(imageGDeleteParamSchema), deleteGalleryImageController)
 
+router.patch(
+  "/recorderGalleryController",
+  accessMiddleware,
+  recorderGalleryController,
+);
+router.patch(
+  "/recorderGalleryController2",
+  accessMiddleware,
+  recorderGalleryController2,
+);
+
+
+// GImageV2 
+// router.post(
+//   "/createGImagesV2Controller",
+//   accessMiddleware,
+//   upload.array("image", 20),
+//   getGallerySignedUrlController
+// )
+
+
+router.get("/gallery/signed-url", accessMiddleware, getGallerySignedUrlController);
+router.post("/gallery/save", accessMiddleware, SaveGImagesV2Controller);
+router.delete("/gallery/failed/cleanup", accessMiddleware, cleanupFailedUploadsController);
+
+
 
 export default router;
+// header Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbW5meGczMjgwMDAwb291NW9qYmdvcnlvIiwiaWF0IjoxNzgxMjM5MTM3LCJleHAiOjE3ODEyNDAwMzd9.xStiP_Og8_OD0yb_3SNF9lxBCuKL2uc4ARt7nepazQI

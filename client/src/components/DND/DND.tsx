@@ -28,19 +28,19 @@ const DNDComponent = () => {
 
       <h1>Dnd5Copy</h1>
       <Dnd5Copy />
-      
+
       <h1>Dnd5Copy2</h1>
       <Dnd5Copy2 />
-
 
       <h1>Dnd6</h1>
       <Dnd6 />
       <h1>Dnd7</h1>
       <Dnd7 />
-      
+
       <h1>Gallery x</h1>
       <Gallery />
 
+     
     </div>
   );
 };

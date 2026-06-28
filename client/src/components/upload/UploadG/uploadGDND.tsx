@@ -39,9 +39,9 @@ const handleDragEnd = (event: DragEndEvent) => {
     const oldIndex  = images.findIndex((img) => img.id === active.id);
     const newIndex = images.findIndex((img) => img.id === over.id)
 
-    const newOlder = arrayMove(images, oldIndex, newIndex);
+    const newOrder = arrayMove(images, oldIndex, newIndex);
 
-    setImages(newOlder)
+    setImages(newOrder)
     
 }
 

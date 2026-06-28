@@ -269,7 +269,7 @@ export type UserGroupByOutputType = {
   _max: UserMaxAggregateOutputType | null
 }
 
-type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
+export type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<UserGroupByOutputType, T['by']> &
       {
@@ -306,7 +306,9 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   verificationTokens?: Prisma.VerificationTokenListRelationFilter
   images?: Prisma.ImageListRelationFilter
+  videos?: Prisma.VideoListRelationFilter
   gImages?: Prisma.GImageListRelationFilter
+  gImagesV2?: Prisma.GImagesV2ListRelationFilter
   post?: Prisma.PostListRelationFilter
   address?: Prisma.XOR<Prisma.AddressNullableScalarRelationFilter, Prisma.AddressWhereInput> | null
   roles?: Prisma.RoleListRelationFilter
@@ -335,7 +337,9 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   verificationTokens?: Prisma.VerificationTokenOrderByRelationAggregateInput
   images?: Prisma.ImageOrderByRelationAggregateInput
+  videos?: Prisma.VideoOrderByRelationAggregateInput
   gImages?: Prisma.GImageOrderByRelationAggregateInput
+  gImagesV2?: Prisma.GImagesV2OrderByRelationAggregateInput
   post?: Prisma.PostOrderByRelationAggregateInput
   address?: Prisma.AddressOrderByWithRelationInput
   roles?: Prisma.RoleOrderByRelationAggregateInput
@@ -367,7 +371,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   verificationTokens?: Prisma.VerificationTokenListRelationFilter
   images?: Prisma.ImageListRelationFilter
+  videos?: Prisma.VideoListRelationFilter
   gImages?: Prisma.GImageListRelationFilter
+  gImagesV2?: Prisma.GImagesV2ListRelationFilter
   post?: Prisma.PostListRelationFilter
   address?: Prisma.XOR<Prisma.AddressNullableScalarRelationFilter, Prisma.AddressWhereInput> | null
   roles?: Prisma.RoleListRelationFilter
@@ -442,7 +448,9 @@ export type UserCreateInput = {
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenCreateNestedManyWithoutUserInput
   images?: Prisma.ImageCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2CreateNestedManyWithoutUserInput
   post?: Prisma.PostCreateNestedManyWithoutUserInput
   address?: Prisma.AddressCreateNestedOneWithoutUserInput
   roles?: Prisma.RoleCreateNestedManyWithoutUsersInput
@@ -471,7 +479,9 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedCreateNestedManyWithoutUserInput
   images?: Prisma.ImageUncheckedCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoUncheckedCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageUncheckedCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2UncheckedCreateNestedManyWithoutUserInput
   post?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   address?: Prisma.AddressUncheckedCreateNestedOneWithoutUserInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutUsersInput
@@ -500,7 +510,9 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUpdateManyWithoutUserNestedInput
   images?: Prisma.ImageUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UpdateManyWithoutUserNestedInput
   post?: Prisma.PostUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUpdateOneWithoutUserNestedInput
   roles?: Prisma.RoleUpdateManyWithoutUsersNestedInput
@@ -529,7 +541,9 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedUpdateManyWithoutUserNestedInput
   images?: Prisma.ImageUncheckedUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUncheckedUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUncheckedUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UncheckedUpdateManyWithoutUserNestedInput
   post?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUncheckedUpdateOneWithoutUserNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutUsersNestedInput
@@ -771,6 +785,20 @@ export type UserUpdateOneRequiredWithoutImagesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutImagesInput, Prisma.UserUpdateWithoutImagesInput>, Prisma.UserUncheckedUpdateWithoutImagesInput>
 }
 
+export type UserCreateNestedOneWithoutVideosInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutVideosInput, Prisma.UserUncheckedCreateWithoutVideosInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutVideosInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutVideosNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutVideosInput, Prisma.UserUncheckedCreateWithoutVideosInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutVideosInput
+  upsert?: Prisma.UserUpsertWithoutVideosInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutVideosInput, Prisma.UserUpdateWithoutVideosInput>, Prisma.UserUncheckedUpdateWithoutVideosInput>
+}
+
 export type UserCreateNestedOneWithoutGImagesInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutGImagesInput, Prisma.UserUncheckedCreateWithoutGImagesInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutGImagesInput
@@ -783,6 +811,20 @@ export type UserUpdateOneRequiredWithoutGImagesNestedInput = {
   upsert?: Prisma.UserUpsertWithoutGImagesInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGImagesInput, Prisma.UserUpdateWithoutGImagesInput>, Prisma.UserUncheckedUpdateWithoutGImagesInput>
+}
+
+export type UserCreateNestedOneWithoutGImagesV2Input = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGImagesV2Input, Prisma.UserUncheckedCreateWithoutGImagesV2Input>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGImagesV2Input
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutGImagesV2NestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGImagesV2Input, Prisma.UserUncheckedCreateWithoutGImagesV2Input>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGImagesV2Input
+  upsert?: Prisma.UserUpsertWithoutGImagesV2Input
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGImagesV2Input, Prisma.UserUpdateWithoutGImagesV2Input>, Prisma.UserUncheckedUpdateWithoutGImagesV2Input>
 }
 
 export type UserCreateNestedOneWithoutAddressInput = {
@@ -911,7 +953,9 @@ export type UserCreateWithoutVerificationTokensInput = {
   verified?: boolean
   createdAt?: Date | string
   images?: Prisma.ImageCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2CreateNestedManyWithoutUserInput
   post?: Prisma.PostCreateNestedManyWithoutUserInput
   address?: Prisma.AddressCreateNestedOneWithoutUserInput
   roles?: Prisma.RoleCreateNestedManyWithoutUsersInput
@@ -939,7 +983,9 @@ export type UserUncheckedCreateWithoutVerificationTokensInput = {
   verified?: boolean
   createdAt?: Date | string
   images?: Prisma.ImageUncheckedCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoUncheckedCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageUncheckedCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2UncheckedCreateNestedManyWithoutUserInput
   post?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   address?: Prisma.AddressUncheckedCreateNestedOneWithoutUserInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutUsersInput
@@ -983,7 +1029,9 @@ export type UserUpdateWithoutVerificationTokensInput = {
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.ImageUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UpdateManyWithoutUserNestedInput
   post?: Prisma.PostUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUpdateOneWithoutUserNestedInput
   roles?: Prisma.RoleUpdateManyWithoutUsersNestedInput
@@ -1011,7 +1059,9 @@ export type UserUncheckedUpdateWithoutVerificationTokensInput = {
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.ImageUncheckedUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUncheckedUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUncheckedUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UncheckedUpdateManyWithoutUserNestedInput
   post?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUncheckedUpdateOneWithoutUserNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutUsersNestedInput
@@ -1040,7 +1090,9 @@ export type UserCreateWithoutPostInput = {
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenCreateNestedManyWithoutUserInput
   images?: Prisma.ImageCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2CreateNestedManyWithoutUserInput
   address?: Prisma.AddressCreateNestedOneWithoutUserInput
   roles?: Prisma.RoleCreateNestedManyWithoutUsersInput
   userGroup?: Prisma.UserGroupCreateNestedManyWithoutUsersInput
@@ -1068,7 +1120,9 @@ export type UserUncheckedCreateWithoutPostInput = {
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedCreateNestedManyWithoutUserInput
   images?: Prisma.ImageUncheckedCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoUncheckedCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageUncheckedCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2UncheckedCreateNestedManyWithoutUserInput
   address?: Prisma.AddressUncheckedCreateNestedOneWithoutUserInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutUsersInput
   userGroup?: Prisma.UserGroupUncheckedCreateNestedManyWithoutUsersInput
@@ -1112,7 +1166,9 @@ export type UserUpdateWithoutPostInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUpdateManyWithoutUserNestedInput
   images?: Prisma.ImageUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUpdateOneWithoutUserNestedInput
   roles?: Prisma.RoleUpdateManyWithoutUsersNestedInput
   userGroup?: Prisma.UserGroupUpdateManyWithoutUsersNestedInput
@@ -1140,7 +1196,9 @@ export type UserUncheckedUpdateWithoutPostInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedUpdateManyWithoutUserNestedInput
   images?: Prisma.ImageUncheckedUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUncheckedUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUncheckedUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UncheckedUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUncheckedUpdateOneWithoutUserNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutUsersNestedInput
   userGroup?: Prisma.UserGroupUncheckedUpdateManyWithoutUsersNestedInput
@@ -1167,7 +1225,9 @@ export type UserCreateWithoutImagesInput = {
   verified?: boolean
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2CreateNestedManyWithoutUserInput
   post?: Prisma.PostCreateNestedManyWithoutUserInput
   address?: Prisma.AddressCreateNestedOneWithoutUserInput
   roles?: Prisma.RoleCreateNestedManyWithoutUsersInput
@@ -1195,7 +1255,9 @@ export type UserUncheckedCreateWithoutImagesInput = {
   verified?: boolean
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoUncheckedCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageUncheckedCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2UncheckedCreateNestedManyWithoutUserInput
   post?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   address?: Prisma.AddressUncheckedCreateNestedOneWithoutUserInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutUsersInput
@@ -1239,7 +1301,9 @@ export type UserUpdateWithoutImagesInput = {
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UpdateManyWithoutUserNestedInput
   post?: Prisma.PostUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUpdateOneWithoutUserNestedInput
   roles?: Prisma.RoleUpdateManyWithoutUsersNestedInput
@@ -1267,7 +1331,145 @@ export type UserUncheckedUpdateWithoutImagesInput = {
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUncheckedUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUncheckedUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UncheckedUpdateManyWithoutUserNestedInput
+  post?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  address?: Prisma.AddressUncheckedUpdateOneWithoutUserNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutUsersNestedInput
+  userGroup?: Prisma.UserGroupUncheckedUpdateManyWithoutUsersNestedInput
+  refreshToken?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  authProvider?: Prisma.AuthProviderUncheckedUpdateManyWithoutUserNestedInput
+  session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutVideosInput = {
+  id?: string
+  name: string
+  password?: string | null
+  email: string
+  Phone?: string | null
+  language?: string | null
+  fakeId?: number
+  avatar?: string | null
+  avatarUrl?: string | null
+  avatarPublicId?: string | null
+  multiImg?: Prisma.UserCreatemultiImgInput | string[]
+  bio?: string | null
+  version?: number | null
+  emailStatus?: $Enums.EmailStatus
+  verified?: boolean
+  createdAt?: Date | string
+  verificationTokens?: Prisma.VerificationTokenCreateNestedManyWithoutUserInput
+  images?: Prisma.ImageCreateNestedManyWithoutUserInput
+  gImages?: Prisma.GImageCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2CreateNestedManyWithoutUserInput
+  post?: Prisma.PostCreateNestedManyWithoutUserInput
+  address?: Prisma.AddressCreateNestedOneWithoutUserInput
+  roles?: Prisma.RoleCreateNestedManyWithoutUsersInput
+  userGroup?: Prisma.UserGroupCreateNestedManyWithoutUsersInput
+  refreshToken?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  authProvider?: Prisma.AuthProviderCreateNestedManyWithoutUserInput
+  session?: Prisma.SessionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutVideosInput = {
+  id?: string
+  name: string
+  password?: string | null
+  email: string
+  Phone?: string | null
+  language?: string | null
+  fakeId?: number
+  avatar?: string | null
+  avatarUrl?: string | null
+  avatarPublicId?: string | null
+  multiImg?: Prisma.UserCreatemultiImgInput | string[]
+  bio?: string | null
+  version?: number | null
+  emailStatus?: $Enums.EmailStatus
+  verified?: boolean
+  createdAt?: Date | string
+  verificationTokens?: Prisma.VerificationTokenUncheckedCreateNestedManyWithoutUserInput
+  images?: Prisma.ImageUncheckedCreateNestedManyWithoutUserInput
+  gImages?: Prisma.GImageUncheckedCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2UncheckedCreateNestedManyWithoutUserInput
+  post?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  address?: Prisma.AddressUncheckedCreateNestedOneWithoutUserInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutUsersInput
+  userGroup?: Prisma.UserGroupUncheckedCreateNestedManyWithoutUsersInput
+  refreshToken?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  authProvider?: Prisma.AuthProviderUncheckedCreateNestedManyWithoutUserInput
+  session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutVideosInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutVideosInput, Prisma.UserUncheckedCreateWithoutVideosInput>
+}
+
+export type UserUpsertWithoutVideosInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutVideosInput, Prisma.UserUncheckedUpdateWithoutVideosInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutVideosInput, Prisma.UserUncheckedCreateWithoutVideosInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutVideosInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutVideosInput, Prisma.UserUncheckedUpdateWithoutVideosInput>
+}
+
+export type UserUpdateWithoutVideosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  Phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fakeId?: Prisma.IntFieldUpdateOperationsInput | number
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarPublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  multiImg?: Prisma.UserUpdatemultiImgInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emailStatus?: Prisma.EnumEmailStatusFieldUpdateOperationsInput | $Enums.EmailStatus
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verificationTokens?: Prisma.VerificationTokenUpdateManyWithoutUserNestedInput
+  images?: Prisma.ImageUpdateManyWithoutUserNestedInput
+  gImages?: Prisma.GImageUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UpdateManyWithoutUserNestedInput
+  post?: Prisma.PostUpdateManyWithoutUserNestedInput
+  address?: Prisma.AddressUpdateOneWithoutUserNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutUsersNestedInput
+  userGroup?: Prisma.UserGroupUpdateManyWithoutUsersNestedInput
+  refreshToken?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  authProvider?: Prisma.AuthProviderUpdateManyWithoutUserNestedInput
+  session?: Prisma.SessionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutVideosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  Phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fakeId?: Prisma.IntFieldUpdateOperationsInput | number
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarPublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  multiImg?: Prisma.UserUpdatemultiImgInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emailStatus?: Prisma.EnumEmailStatusFieldUpdateOperationsInput | $Enums.EmailStatus
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verificationTokens?: Prisma.VerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+  images?: Prisma.ImageUncheckedUpdateManyWithoutUserNestedInput
+  gImages?: Prisma.GImageUncheckedUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UncheckedUpdateManyWithoutUserNestedInput
   post?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUncheckedUpdateOneWithoutUserNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutUsersNestedInput
@@ -1296,6 +1498,8 @@ export type UserCreateWithoutGImagesInput = {
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenCreateNestedManyWithoutUserInput
   images?: Prisma.ImageCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2CreateNestedManyWithoutUserInput
   post?: Prisma.PostCreateNestedManyWithoutUserInput
   address?: Prisma.AddressCreateNestedOneWithoutUserInput
   roles?: Prisma.RoleCreateNestedManyWithoutUsersInput
@@ -1324,6 +1528,8 @@ export type UserUncheckedCreateWithoutGImagesInput = {
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedCreateNestedManyWithoutUserInput
   images?: Prisma.ImageUncheckedCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoUncheckedCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2UncheckedCreateNestedManyWithoutUserInput
   post?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   address?: Prisma.AddressUncheckedCreateNestedOneWithoutUserInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutUsersInput
@@ -1368,6 +1574,8 @@ export type UserUpdateWithoutGImagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUpdateManyWithoutUserNestedInput
   images?: Prisma.ImageUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UpdateManyWithoutUserNestedInput
   post?: Prisma.PostUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUpdateOneWithoutUserNestedInput
   roles?: Prisma.RoleUpdateManyWithoutUsersNestedInput
@@ -1396,6 +1604,144 @@ export type UserUncheckedUpdateWithoutGImagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedUpdateManyWithoutUserNestedInput
   images?: Prisma.ImageUncheckedUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUncheckedUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UncheckedUpdateManyWithoutUserNestedInput
+  post?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  address?: Prisma.AddressUncheckedUpdateOneWithoutUserNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutUsersNestedInput
+  userGroup?: Prisma.UserGroupUncheckedUpdateManyWithoutUsersNestedInput
+  refreshToken?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  authProvider?: Prisma.AuthProviderUncheckedUpdateManyWithoutUserNestedInput
+  session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutGImagesV2Input = {
+  id?: string
+  name: string
+  password?: string | null
+  email: string
+  Phone?: string | null
+  language?: string | null
+  fakeId?: number
+  avatar?: string | null
+  avatarUrl?: string | null
+  avatarPublicId?: string | null
+  multiImg?: Prisma.UserCreatemultiImgInput | string[]
+  bio?: string | null
+  version?: number | null
+  emailStatus?: $Enums.EmailStatus
+  verified?: boolean
+  createdAt?: Date | string
+  verificationTokens?: Prisma.VerificationTokenCreateNestedManyWithoutUserInput
+  images?: Prisma.ImageCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoCreateNestedManyWithoutUserInput
+  gImages?: Prisma.GImageCreateNestedManyWithoutUserInput
+  post?: Prisma.PostCreateNestedManyWithoutUserInput
+  address?: Prisma.AddressCreateNestedOneWithoutUserInput
+  roles?: Prisma.RoleCreateNestedManyWithoutUsersInput
+  userGroup?: Prisma.UserGroupCreateNestedManyWithoutUsersInput
+  refreshToken?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  authProvider?: Prisma.AuthProviderCreateNestedManyWithoutUserInput
+  session?: Prisma.SessionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutGImagesV2Input = {
+  id?: string
+  name: string
+  password?: string | null
+  email: string
+  Phone?: string | null
+  language?: string | null
+  fakeId?: number
+  avatar?: string | null
+  avatarUrl?: string | null
+  avatarPublicId?: string | null
+  multiImg?: Prisma.UserCreatemultiImgInput | string[]
+  bio?: string | null
+  version?: number | null
+  emailStatus?: $Enums.EmailStatus
+  verified?: boolean
+  createdAt?: Date | string
+  verificationTokens?: Prisma.VerificationTokenUncheckedCreateNestedManyWithoutUserInput
+  images?: Prisma.ImageUncheckedCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoUncheckedCreateNestedManyWithoutUserInput
+  gImages?: Prisma.GImageUncheckedCreateNestedManyWithoutUserInput
+  post?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  address?: Prisma.AddressUncheckedCreateNestedOneWithoutUserInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutUsersInput
+  userGroup?: Prisma.UserGroupUncheckedCreateNestedManyWithoutUsersInput
+  refreshToken?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  authProvider?: Prisma.AuthProviderUncheckedCreateNestedManyWithoutUserInput
+  session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutGImagesV2Input = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutGImagesV2Input, Prisma.UserUncheckedCreateWithoutGImagesV2Input>
+}
+
+export type UserUpsertWithoutGImagesV2Input = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutGImagesV2Input, Prisma.UserUncheckedUpdateWithoutGImagesV2Input>
+  create: Prisma.XOR<Prisma.UserCreateWithoutGImagesV2Input, Prisma.UserUncheckedCreateWithoutGImagesV2Input>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutGImagesV2Input = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutGImagesV2Input, Prisma.UserUncheckedUpdateWithoutGImagesV2Input>
+}
+
+export type UserUpdateWithoutGImagesV2Input = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  Phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fakeId?: Prisma.IntFieldUpdateOperationsInput | number
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarPublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  multiImg?: Prisma.UserUpdatemultiImgInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emailStatus?: Prisma.EnumEmailStatusFieldUpdateOperationsInput | $Enums.EmailStatus
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verificationTokens?: Prisma.VerificationTokenUpdateManyWithoutUserNestedInput
+  images?: Prisma.ImageUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUpdateManyWithoutUserNestedInput
+  gImages?: Prisma.GImageUpdateManyWithoutUserNestedInput
+  post?: Prisma.PostUpdateManyWithoutUserNestedInput
+  address?: Prisma.AddressUpdateOneWithoutUserNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutUsersNestedInput
+  userGroup?: Prisma.UserGroupUpdateManyWithoutUsersNestedInput
+  refreshToken?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  authProvider?: Prisma.AuthProviderUpdateManyWithoutUserNestedInput
+  session?: Prisma.SessionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutGImagesV2Input = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  Phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fakeId?: Prisma.IntFieldUpdateOperationsInput | number
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarPublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  multiImg?: Prisma.UserUpdatemultiImgInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emailStatus?: Prisma.EnumEmailStatusFieldUpdateOperationsInput | $Enums.EmailStatus
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verificationTokens?: Prisma.VerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+  images?: Prisma.ImageUncheckedUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUncheckedUpdateManyWithoutUserNestedInput
+  gImages?: Prisma.GImageUncheckedUpdateManyWithoutUserNestedInput
   post?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUncheckedUpdateOneWithoutUserNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutUsersNestedInput
@@ -1424,7 +1770,9 @@ export type UserCreateWithoutAddressInput = {
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenCreateNestedManyWithoutUserInput
   images?: Prisma.ImageCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2CreateNestedManyWithoutUserInput
   post?: Prisma.PostCreateNestedManyWithoutUserInput
   roles?: Prisma.RoleCreateNestedManyWithoutUsersInput
   userGroup?: Prisma.UserGroupCreateNestedManyWithoutUsersInput
@@ -1452,7 +1800,9 @@ export type UserUncheckedCreateWithoutAddressInput = {
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedCreateNestedManyWithoutUserInput
   images?: Prisma.ImageUncheckedCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoUncheckedCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageUncheckedCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2UncheckedCreateNestedManyWithoutUserInput
   post?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutUsersInput
   userGroup?: Prisma.UserGroupUncheckedCreateNestedManyWithoutUsersInput
@@ -1496,7 +1846,9 @@ export type UserUpdateWithoutAddressInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUpdateManyWithoutUserNestedInput
   images?: Prisma.ImageUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UpdateManyWithoutUserNestedInput
   post?: Prisma.PostUpdateManyWithoutUserNestedInput
   roles?: Prisma.RoleUpdateManyWithoutUsersNestedInput
   userGroup?: Prisma.UserGroupUpdateManyWithoutUsersNestedInput
@@ -1524,7 +1876,9 @@ export type UserUncheckedUpdateWithoutAddressInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedUpdateManyWithoutUserNestedInput
   images?: Prisma.ImageUncheckedUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUncheckedUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUncheckedUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UncheckedUpdateManyWithoutUserNestedInput
   post?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutUsersNestedInput
   userGroup?: Prisma.UserGroupUncheckedUpdateManyWithoutUsersNestedInput
@@ -1552,7 +1906,9 @@ export type UserCreateWithoutRolesInput = {
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenCreateNestedManyWithoutUserInput
   images?: Prisma.ImageCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2CreateNestedManyWithoutUserInput
   post?: Prisma.PostCreateNestedManyWithoutUserInput
   address?: Prisma.AddressCreateNestedOneWithoutUserInput
   userGroup?: Prisma.UserGroupCreateNestedManyWithoutUsersInput
@@ -1580,7 +1936,9 @@ export type UserUncheckedCreateWithoutRolesInput = {
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedCreateNestedManyWithoutUserInput
   images?: Prisma.ImageUncheckedCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoUncheckedCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageUncheckedCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2UncheckedCreateNestedManyWithoutUserInput
   post?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   address?: Prisma.AddressUncheckedCreateNestedOneWithoutUserInput
   userGroup?: Prisma.UserGroupUncheckedCreateNestedManyWithoutUsersInput
@@ -1651,7 +2009,9 @@ export type UserCreateWithoutUserGroupInput = {
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenCreateNestedManyWithoutUserInput
   images?: Prisma.ImageCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2CreateNestedManyWithoutUserInput
   post?: Prisma.PostCreateNestedManyWithoutUserInput
   address?: Prisma.AddressCreateNestedOneWithoutUserInput
   roles?: Prisma.RoleCreateNestedManyWithoutUsersInput
@@ -1679,7 +2039,9 @@ export type UserUncheckedCreateWithoutUserGroupInput = {
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedCreateNestedManyWithoutUserInput
   images?: Prisma.ImageUncheckedCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoUncheckedCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageUncheckedCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2UncheckedCreateNestedManyWithoutUserInput
   post?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   address?: Prisma.AddressUncheckedCreateNestedOneWithoutUserInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutUsersInput
@@ -1723,7 +2085,9 @@ export type UserUpdateWithoutUserGroupInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUpdateManyWithoutUserNestedInput
   images?: Prisma.ImageUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UpdateManyWithoutUserNestedInput
   post?: Prisma.PostUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUpdateOneWithoutUserNestedInput
   roles?: Prisma.RoleUpdateManyWithoutUsersNestedInput
@@ -1751,7 +2115,9 @@ export type UserUncheckedUpdateWithoutUserGroupInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedUpdateManyWithoutUserNestedInput
   images?: Prisma.ImageUncheckedUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUncheckedUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUncheckedUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UncheckedUpdateManyWithoutUserNestedInput
   post?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUncheckedUpdateOneWithoutUserNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutUsersNestedInput
@@ -1779,7 +2145,9 @@ export type UserCreateWithoutRefreshTokenInput = {
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenCreateNestedManyWithoutUserInput
   images?: Prisma.ImageCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2CreateNestedManyWithoutUserInput
   post?: Prisma.PostCreateNestedManyWithoutUserInput
   address?: Prisma.AddressCreateNestedOneWithoutUserInput
   roles?: Prisma.RoleCreateNestedManyWithoutUsersInput
@@ -1807,7 +2175,9 @@ export type UserUncheckedCreateWithoutRefreshTokenInput = {
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedCreateNestedManyWithoutUserInput
   images?: Prisma.ImageUncheckedCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoUncheckedCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageUncheckedCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2UncheckedCreateNestedManyWithoutUserInput
   post?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   address?: Prisma.AddressUncheckedCreateNestedOneWithoutUserInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutUsersInput
@@ -1851,7 +2221,9 @@ export type UserUpdateWithoutRefreshTokenInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUpdateManyWithoutUserNestedInput
   images?: Prisma.ImageUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UpdateManyWithoutUserNestedInput
   post?: Prisma.PostUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUpdateOneWithoutUserNestedInput
   roles?: Prisma.RoleUpdateManyWithoutUsersNestedInput
@@ -1879,7 +2251,9 @@ export type UserUncheckedUpdateWithoutRefreshTokenInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedUpdateManyWithoutUserNestedInput
   images?: Prisma.ImageUncheckedUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUncheckedUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUncheckedUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UncheckedUpdateManyWithoutUserNestedInput
   post?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUncheckedUpdateOneWithoutUserNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutUsersNestedInput
@@ -1907,7 +2281,9 @@ export type UserCreateWithoutAuthProviderInput = {
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenCreateNestedManyWithoutUserInput
   images?: Prisma.ImageCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2CreateNestedManyWithoutUserInput
   post?: Prisma.PostCreateNestedManyWithoutUserInput
   address?: Prisma.AddressCreateNestedOneWithoutUserInput
   roles?: Prisma.RoleCreateNestedManyWithoutUsersInput
@@ -1935,7 +2311,9 @@ export type UserUncheckedCreateWithoutAuthProviderInput = {
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedCreateNestedManyWithoutUserInput
   images?: Prisma.ImageUncheckedCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoUncheckedCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageUncheckedCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2UncheckedCreateNestedManyWithoutUserInput
   post?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   address?: Prisma.AddressUncheckedCreateNestedOneWithoutUserInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutUsersInput
@@ -1979,7 +2357,9 @@ export type UserUpdateWithoutAuthProviderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUpdateManyWithoutUserNestedInput
   images?: Prisma.ImageUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UpdateManyWithoutUserNestedInput
   post?: Prisma.PostUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUpdateOneWithoutUserNestedInput
   roles?: Prisma.RoleUpdateManyWithoutUsersNestedInput
@@ -2007,7 +2387,9 @@ export type UserUncheckedUpdateWithoutAuthProviderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedUpdateManyWithoutUserNestedInput
   images?: Prisma.ImageUncheckedUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUncheckedUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUncheckedUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UncheckedUpdateManyWithoutUserNestedInput
   post?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUncheckedUpdateOneWithoutUserNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutUsersNestedInput
@@ -2035,7 +2417,9 @@ export type UserCreateWithoutSessionInput = {
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenCreateNestedManyWithoutUserInput
   images?: Prisma.ImageCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2CreateNestedManyWithoutUserInput
   post?: Prisma.PostCreateNestedManyWithoutUserInput
   address?: Prisma.AddressCreateNestedOneWithoutUserInput
   roles?: Prisma.RoleCreateNestedManyWithoutUsersInput
@@ -2063,7 +2447,9 @@ export type UserUncheckedCreateWithoutSessionInput = {
   createdAt?: Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedCreateNestedManyWithoutUserInput
   images?: Prisma.ImageUncheckedCreateNestedManyWithoutUserInput
+  videos?: Prisma.VideoUncheckedCreateNestedManyWithoutUserInput
   gImages?: Prisma.GImageUncheckedCreateNestedManyWithoutUserInput
+  gImagesV2?: Prisma.GImagesV2UncheckedCreateNestedManyWithoutUserInput
   post?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   address?: Prisma.AddressUncheckedCreateNestedOneWithoutUserInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutUsersInput
@@ -2107,7 +2493,9 @@ export type UserUpdateWithoutSessionInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUpdateManyWithoutUserNestedInput
   images?: Prisma.ImageUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UpdateManyWithoutUserNestedInput
   post?: Prisma.PostUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUpdateOneWithoutUserNestedInput
   roles?: Prisma.RoleUpdateManyWithoutUsersNestedInput
@@ -2135,7 +2523,9 @@ export type UserUncheckedUpdateWithoutSessionInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedUpdateManyWithoutUserNestedInput
   images?: Prisma.ImageUncheckedUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUncheckedUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUncheckedUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UncheckedUpdateManyWithoutUserNestedInput
   post?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUncheckedUpdateOneWithoutUserNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutUsersNestedInput
@@ -2163,7 +2553,9 @@ export type UserUpdateWithoutRolesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUpdateManyWithoutUserNestedInput
   images?: Prisma.ImageUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UpdateManyWithoutUserNestedInput
   post?: Prisma.PostUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUpdateOneWithoutUserNestedInput
   userGroup?: Prisma.UserGroupUpdateManyWithoutUsersNestedInput
@@ -2191,7 +2583,9 @@ export type UserUncheckedUpdateWithoutRolesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationTokens?: Prisma.VerificationTokenUncheckedUpdateManyWithoutUserNestedInput
   images?: Prisma.ImageUncheckedUpdateManyWithoutUserNestedInput
+  videos?: Prisma.VideoUncheckedUpdateManyWithoutUserNestedInput
   gImages?: Prisma.GImageUncheckedUpdateManyWithoutUserNestedInput
+  gImagesV2?: Prisma.GImagesV2UncheckedUpdateManyWithoutUserNestedInput
   post?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   address?: Prisma.AddressUncheckedUpdateOneWithoutUserNestedInput
   userGroup?: Prisma.UserGroupUncheckedUpdateManyWithoutUsersNestedInput
@@ -2227,7 +2621,9 @@ export type UserUncheckedUpdateManyWithoutRolesInput = {
 export type UserCountOutputType = {
   verificationTokens: number
   images: number
+  videos: number
   gImages: number
+  gImagesV2: number
   post: number
   roles: number
   userGroup: number
@@ -2239,7 +2635,9 @@ export type UserCountOutputType = {
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   verificationTokens?: boolean | UserCountOutputTypeCountVerificationTokensArgs
   images?: boolean | UserCountOutputTypeCountImagesArgs
+  videos?: boolean | UserCountOutputTypeCountVideosArgs
   gImages?: boolean | UserCountOutputTypeCountGImagesArgs
+  gImagesV2?: boolean | UserCountOutputTypeCountGImagesV2Args
   post?: boolean | UserCountOutputTypeCountPostArgs
   roles?: boolean | UserCountOutputTypeCountRolesArgs
   userGroup?: boolean | UserCountOutputTypeCountUserGroupArgs
@@ -2275,8 +2673,22 @@ export type UserCountOutputTypeCountImagesArgs<ExtArgs extends runtime.Types.Ext
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountVideosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VideoWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountGImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.GImageWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountGImagesV2Args<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GImagesV2WhereInput
 }
 
 /**
@@ -2341,7 +2753,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   verificationTokens?: boolean | Prisma.User$verificationTokensArgs<ExtArgs>
   images?: boolean | Prisma.User$imagesArgs<ExtArgs>
+  videos?: boolean | Prisma.User$videosArgs<ExtArgs>
   gImages?: boolean | Prisma.User$gImagesArgs<ExtArgs>
+  gImagesV2?: boolean | Prisma.User$gImagesV2Args<ExtArgs>
   post?: boolean | Prisma.User$postArgs<ExtArgs>
   address?: boolean | Prisma.User$addressArgs<ExtArgs>
   roles?: boolean | Prisma.User$rolesArgs<ExtArgs>
@@ -2413,7 +2827,9 @@ export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   verificationTokens?: boolean | Prisma.User$verificationTokensArgs<ExtArgs>
   images?: boolean | Prisma.User$imagesArgs<ExtArgs>
+  videos?: boolean | Prisma.User$videosArgs<ExtArgs>
   gImages?: boolean | Prisma.User$gImagesArgs<ExtArgs>
+  gImagesV2?: boolean | Prisma.User$gImagesV2Args<ExtArgs>
   post?: boolean | Prisma.User$postArgs<ExtArgs>
   address?: boolean | Prisma.User$addressArgs<ExtArgs>
   roles?: boolean | Prisma.User$rolesArgs<ExtArgs>
@@ -2431,7 +2847,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     verificationTokens: Prisma.$VerificationTokenPayload<ExtArgs>[]
     images: Prisma.$ImagePayload<ExtArgs>[]
+    videos: Prisma.$VideoPayload<ExtArgs>[]
     gImages: Prisma.$GImagePayload<ExtArgs>[]
+    gImagesV2: Prisma.$GImagesV2Payload<ExtArgs>[]
     post: Prisma.$PostPayload<ExtArgs>[]
     address: Prisma.$AddressPayload<ExtArgs> | null
     roles: Prisma.$RolePayload<ExtArgs>[]
@@ -2853,7 +3271,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   verificationTokens<T extends Prisma.User$verificationTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$verificationTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   images<T extends Prisma.User$imagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  videos<T extends Prisma.User$videosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$videosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   gImages<T extends Prisma.User$gImagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$gImagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  gImagesV2<T extends Prisma.User$gImagesV2Args<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$gImagesV2Args<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GImagesV2Payload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   post<T extends Prisma.User$postArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$postArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   address<T extends Prisma.User$addressArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$addressArgs<ExtArgs>>): Prisma.Prisma__AddressClient<runtime.Types.Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   roles<T extends Prisma.User$rolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3102,6 +3522,11 @@ export type UserFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Skip the first `n` Users.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Users.
+   */
   distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
 }
 
@@ -3342,6 +3767,30 @@ export type User$imagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 }
 
 /**
+ * User.videos
+ */
+export type User$videosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Video
+   */
+  select?: Prisma.VideoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Video
+   */
+  omit?: Prisma.VideoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VideoInclude<ExtArgs> | null
+  where?: Prisma.VideoWhereInput
+  orderBy?: Prisma.VideoOrderByWithRelationInput | Prisma.VideoOrderByWithRelationInput[]
+  cursor?: Prisma.VideoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VideoScalarFieldEnum | Prisma.VideoScalarFieldEnum[]
+}
+
+/**
  * User.gImages
  */
 export type User$gImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3363,6 +3812,30 @@ export type User$gImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.GImageScalarFieldEnum | Prisma.GImageScalarFieldEnum[]
+}
+
+/**
+ * User.gImagesV2
+ */
+export type User$gImagesV2Args<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GImagesV2
+   */
+  select?: Prisma.GImagesV2Select<ExtArgs> | null
+  /**
+   * Omit specific fields from the GImagesV2
+   */
+  omit?: Prisma.GImagesV2Omit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GImagesV2Include<ExtArgs> | null
+  where?: Prisma.GImagesV2WhereInput
+  orderBy?: Prisma.GImagesV2OrderByWithRelationInput | Prisma.GImagesV2OrderByWithRelationInput[]
+  cursor?: Prisma.GImagesV2WhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GImagesV2ScalarFieldEnum | Prisma.GImagesV2ScalarFieldEnum[]
 }
 
 /**

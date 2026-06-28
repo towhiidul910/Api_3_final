@@ -57,7 +57,9 @@ export const ModelName = {
   VerificationToken: 'VerificationToken',
   Post: 'Post',
   Image: 'Image',
+  Video: 'Video',
   GImage: 'GImage',
+  GImagesV2: 'GImagesV2',
   Comment: 'Comment',
   Address: 'Address',
   Group: 'Group',
@@ -167,6 +169,22 @@ export const ImageScalarFieldEnum = {
 export type ImageScalarFieldEnum = (typeof ImageScalarFieldEnum)[keyof typeof ImageScalarFieldEnum]
 
 
+export const VideoScalarFieldEnum = {
+  id: 'id',
+  videoUrl: 'videoUrl',
+  videoPublicId: 'videoPublicId',
+  thumbnailUrl: 'thumbnailUrl',
+  title: 'title',
+  duration: 'duration',
+  order: 'order',
+  zone: 'zone',
+  createAt: 'createAt',
+  userId: 'userId'
+} as const
+
+export type VideoScalarFieldEnum = (typeof VideoScalarFieldEnum)[keyof typeof VideoScalarFieldEnum]
+
+
 export const GImageScalarFieldEnum = {
   id: 'id',
   imageUrl: 'imageUrl',
@@ -177,6 +195,19 @@ export const GImageScalarFieldEnum = {
 } as const
 
 export type GImageScalarFieldEnum = (typeof GImageScalarFieldEnum)[keyof typeof GImageScalarFieldEnum]
+
+
+export const GImagesV2ScalarFieldEnum = {
+  id: 'id',
+  imageUrl: 'imageUrl',
+  imagePublicId: 'imagePublicId',
+  userId: 'userId',
+  order: 'order',
+  zone: 'zone',
+  createAt: 'createAt'
+} as const
+
+export type GImagesV2ScalarFieldEnum = (typeof GImagesV2ScalarFieldEnum)[keyof typeof GImagesV2ScalarFieldEnum]
 
 
 export const CommentScalarFieldEnum = {

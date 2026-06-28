@@ -48,10 +48,20 @@ export type Post = Prisma.PostModel
  */
 export type Image = Prisma.ImageModel
 /**
+ * Model Video
+ * 
+ */
+export type Video = Prisma.VideoModel
+/**
  * Model GImage
  * 
  */
 export type GImage = Prisma.GImageModel
+/**
+ * Model GImagesV2
+ * 
+ */
+export type GImagesV2 = Prisma.GImagesV2Model
 /**
  * Model Comment
  * 

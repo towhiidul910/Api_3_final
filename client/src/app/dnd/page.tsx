@@ -1,4 +1,5 @@
 "use client"
+import DNDComponentDB from '@/components/DND.DB/DND';
 import DNDComponent from '@/components/DND/DND'
 
 const DndPage = () => {
@@ -6,8 +7,9 @@ const DndPage = () => {
     
    
   return (
-    <div>
+    <div className="p-6 w-400 ">
         <DNDComponent/>
+        <DNDComponentDB/>
     </div>
   )
 }

@@ -158,7 +158,7 @@ export type AuthProviderGroupByOutputType = {
   _max: AuthProviderMaxAggregateOutputType | null
 }
 
-type GetAuthProviderGroupByPayload<T extends AuthProviderGroupByArgs> = Prisma.PrismaPromise<
+export type GetAuthProviderGroupByPayload<T extends AuthProviderGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<AuthProviderGroupByOutputType, T['by']> &
       {
@@ -1128,6 +1128,11 @@ export type AuthProviderFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Skip the first `n` AuthProviders.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of AuthProviders.
+   */
   distinct?: Prisma.AuthProviderScalarFieldEnum | Prisma.AuthProviderScalarFieldEnum[]
 }
 

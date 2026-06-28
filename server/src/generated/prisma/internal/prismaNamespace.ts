@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.3.0
- * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
+ * Prisma Client JS version: 7.7.0
+ * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.3.0",
-  engine: "9d6ad21cbbceab97458517b147a6a09ff43aa735"
+  client: "7.7.0",
+  engine: "75cbdc1eb7150937890ad5465d861175c6624711"
 }
 
 /**
@@ -390,7 +390,9 @@ export const ModelName = {
   VerificationToken: 'VerificationToken',
   Post: 'Post',
   Image: 'Image',
+  Video: 'Video',
   GImage: 'GImage',
+  GImagesV2: 'GImagesV2',
   Comment: 'Comment',
   Address: 'Address',
   Group: 'Group',
@@ -414,7 +416,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "outboxEvent" | "payload" | "verificationToken" | "post" | "image" | "gImage" | "comment" | "address" | "group" | "role" | "userGroup" | "refreshToken" | "authProvider" | "session"
+    modelProps: "user" | "outboxEvent" | "payload" | "verificationToken" | "post" | "image" | "video" | "gImage" | "gImagesV2" | "comment" | "address" | "group" | "role" | "userGroup" | "refreshToken" | "authProvider" | "session"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -862,6 +864,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Video: {
+      payload: Prisma.$VideoPayload<ExtArgs>
+      fields: Prisma.VideoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.VideoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.VideoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPayload>
+        }
+        findFirst: {
+          args: Prisma.VideoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.VideoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPayload>
+        }
+        findMany: {
+          args: Prisma.VideoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPayload>[]
+        }
+        create: {
+          args: Prisma.VideoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPayload>
+        }
+        createMany: {
+          args: Prisma.VideoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.VideoCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPayload>[]
+        }
+        delete: {
+          args: Prisma.VideoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPayload>
+        }
+        update: {
+          args: Prisma.VideoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPayload>
+        }
+        deleteMany: {
+          args: Prisma.VideoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.VideoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.VideoUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPayload>[]
+        }
+        upsert: {
+          args: Prisma.VideoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VideoPayload>
+        }
+        aggregate: {
+          args: Prisma.VideoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateVideo>
+        }
+        groupBy: {
+          args: Prisma.VideoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VideoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.VideoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VideoCountAggregateOutputType> | number
+        }
+      }
+    }
     GImage: {
       payload: Prisma.$GImagePayload<ExtArgs>
       fields: Prisma.GImageFieldRefs
@@ -933,6 +1009,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.GImageCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.GImageCountAggregateOutputType> | number
+        }
+      }
+    }
+    GImagesV2: {
+      payload: Prisma.$GImagesV2Payload<ExtArgs>
+      fields: Prisma.GImagesV2FieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GImagesV2FindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GImagesV2Payload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GImagesV2FindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GImagesV2Payload>
+        }
+        findFirst: {
+          args: Prisma.GImagesV2FindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GImagesV2Payload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GImagesV2FindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GImagesV2Payload>
+        }
+        findMany: {
+          args: Prisma.GImagesV2FindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GImagesV2Payload>[]
+        }
+        create: {
+          args: Prisma.GImagesV2CreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GImagesV2Payload>
+        }
+        createMany: {
+          args: Prisma.GImagesV2CreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GImagesV2CreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GImagesV2Payload>[]
+        }
+        delete: {
+          args: Prisma.GImagesV2DeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GImagesV2Payload>
+        }
+        update: {
+          args: Prisma.GImagesV2UpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GImagesV2Payload>
+        }
+        deleteMany: {
+          args: Prisma.GImagesV2DeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GImagesV2UpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GImagesV2UpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GImagesV2Payload>[]
+        }
+        upsert: {
+          args: Prisma.GImagesV2UpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GImagesV2Payload>
+        }
+        aggregate: {
+          args: Prisma.GImagesV2AggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGImagesV2>
+        }
+        groupBy: {
+          args: Prisma.GImagesV2GroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GImagesV2GroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GImagesV2CountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GImagesV2CountAggregateOutputType> | number
         }
       }
     }
@@ -1650,6 +1800,22 @@ export const ImageScalarFieldEnum = {
 export type ImageScalarFieldEnum = (typeof ImageScalarFieldEnum)[keyof typeof ImageScalarFieldEnum]
 
 
+export const VideoScalarFieldEnum = {
+  id: 'id',
+  videoUrl: 'videoUrl',
+  videoPublicId: 'videoPublicId',
+  thumbnailUrl: 'thumbnailUrl',
+  title: 'title',
+  duration: 'duration',
+  order: 'order',
+  zone: 'zone',
+  createAt: 'createAt',
+  userId: 'userId'
+} as const
+
+export type VideoScalarFieldEnum = (typeof VideoScalarFieldEnum)[keyof typeof VideoScalarFieldEnum]
+
+
 export const GImageScalarFieldEnum = {
   id: 'id',
   imageUrl: 'imageUrl',
@@ -1660,6 +1826,19 @@ export const GImageScalarFieldEnum = {
 } as const
 
 export type GImageScalarFieldEnum = (typeof GImageScalarFieldEnum)[keyof typeof GImageScalarFieldEnum]
+
+
+export const GImagesV2ScalarFieldEnum = {
+  id: 'id',
+  imageUrl: 'imageUrl',
+  imagePublicId: 'imagePublicId',
+  userId: 'userId',
+  order: 'order',
+  zone: 'zone',
+  createAt: 'createAt'
+} as const
+
+export type GImagesV2ScalarFieldEnum = (typeof GImagesV2ScalarFieldEnum)[keyof typeof GImagesV2ScalarFieldEnum]
 
 
 export const CommentScalarFieldEnum = {
@@ -1993,7 +2172,9 @@ export type GlobalOmitConfig = {
   verificationToken?: Prisma.VerificationTokenOmit
   post?: Prisma.PostOmit
   image?: Prisma.ImageOmit
+  video?: Prisma.VideoOmit
   gImage?: Prisma.GImageOmit
+  gImagesV2?: Prisma.GImagesV2Omit
   comment?: Prisma.CommentOmit
   address?: Prisma.AddressOmit
   group?: Prisma.GroupOmit

@@ -28,7 +28,7 @@ const app = express();
 app.use(helmet());
 
 /* 2️⃣ CORS (important for cookies) */
-startOutboxCron();
+startOutboxCron();  //! start cron 🌽🌽🌽
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:3000",

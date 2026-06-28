@@ -61,3 +61,13 @@ export const uploadAvatar = multer({
     }
   },
 });
+
+
+// --- uploader GImageV2 ---
+
+const uploadPathV2 = path.join(__dirname, "../../uploads/user/images");
+
+if (!fs.existsSync(uploadPathV2)) {
+  fs.mkdirSync(uploadPathV2, { recursive: true });
+}
+
