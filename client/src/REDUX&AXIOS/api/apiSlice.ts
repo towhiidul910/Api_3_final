@@ -103,6 +103,50 @@ type SaveGImagesV2Arg = {
   zone: "zone1" | "zone2" | "zone3";
 };
 
+// --- video upload ---
+type VideoSingedUrlResponse = {
+  data: {
+    timestamp: string;
+    signature: string;
+    folder: string;
+    cloudName: string;
+    apiKey: string;
+  };
+};
+
+type SaveVideoArg = {
+  videoUrl: string;
+  videoPublicId: string;
+  duration?: number;
+  zone?: "zone1" | "zone2" | "zone3";
+};
+
+type SaveVideoResponse = {
+  data: {
+    id: string;
+    videoUrl: string;
+    thumbnailUrl: string | null;
+    duration: number | null;
+    order: number;
+    zone: string;
+  };
+};
+
+// -- get Video 
+type GetVideosResponse = {
+  data: {
+    id: string;
+    videoUrl: string;
+    thumbnailUrl: string | null;
+    duration: number | null;
+    title: string | null;
+    order: number;
+    zone: string;
+    createAt: string;
+  }[]
+}
+
+
 export const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithRefresh,
@@ -248,6 +292,37 @@ export const api = createApi({
       }),
       invalidatesTags: ["User"],
     }),
+    // --- video upload ---
+    getVideoSignedUrl: builder.query<VideoSingedUrlResponse, void>({
+      query: () => ({
+        url: "/upload/video/signed-url",
+        method: "GET",
+      }),
+    }),
+    saveVideo: builder.mutation<SaveVideoResponse, SaveVideoArg>({
+      query: (body) => ({
+        url: "/upload/video/save",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["User"]
+    }),
+    // --- get image gallery ---
+    getVideos: builder.query<GetVideosResponse, void>({
+      query: () => ({
+        url: "/upload/video/getAll",
+        method: "GET"
+      }),
+      providesTags: ["User"]
+    }),
+    // --- Endpoint ---
+    deleteVideo: builder.mutation<{message: string}, string>({
+      query: (id) => ({
+        url: `/upload/video/delete/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["User"]
+    })
   }),
 });
 
@@ -270,7 +345,12 @@ export const {
   // -- direct
   useLazyGetGallerySignedUrlQuery,
   useSaveGImageV2Mutation,
-  useCleanupFailedUploadsControllerMutation
+  useCleanupFailedUploadsControllerMutation,
+  // -- direct video upload
+  useLazyGetVideoSignedUrlQuery,
+  useSaveVideoMutation,
+  useGetVideosQuery,
+  useDeleteVideoMutation
 } = api;
 
 // notes\redux-rtk-notes.md

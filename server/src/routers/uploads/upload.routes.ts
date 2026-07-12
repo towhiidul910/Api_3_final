@@ -9,7 +9,7 @@ import {
   uploadRelationAndDeletePrevAvatarController,
   uploadRelationImgAndDeletePrevImgFromDBRawAndFromDisk,
   uploadUserAvatar,
-}  from "../../uploads/multer/controller/upload.controller";
+} from "../../uploads/multer/controller/upload.controller";
 import {
   createGImagesController,
   deleteImageController,
@@ -24,22 +24,33 @@ import {
   getGalleryImageController,
   deleteGalleryImageController,
   recorderGalleryController,
-  recorderGalleryController2
-}   from "../../uploads/cloudinary/controller/cloudinary.controller";
+  recorderGalleryController2,
+} from "../../uploads/cloudinary/controller/cloudinary.controller";
 import { accessMiddleware } from "../../middlewares/auth/auth.middlewhere.service";
 import { ValidateR } from "../../middlewares/validateByZod/validate.resorce";
-import { getGallerySchema, imageGDeleteParamSchema } from "../../lib/zodSchema/user.schema";
-import { cleanupFailedUploadsController, getGallerySignedUrlController, SaveGImagesV2Controller } from "../../uploads/cloudinary/controller/cloudinary.v2.controller";
-// import { uploadAvatar } from 
-
-
+import {
+  getGallerySchema,
+  imageGDeleteParamSchema,
+} from "../../lib/zodSchema/user.schema";
+import {
+  cleanupFailedUploadsController,
+  getGallerySignedUrlController,
+  SaveGImagesV2Controller,
+} from "../../uploads/cloudinary/controller/cloudinary.v2.controller";
+import { uploadVideo } from "../../uploads/video/config/multer/multer.video";
+import {
+    cleanupFailedVideoUploads,
+  deleteVideoController,
+  getVideosController,
+  getVideoSignedUrlController,
+  saveVideoController,
+  uploadVideoController,
+} from "../../uploads/video/controller/cloudinary.video.controller";
+// import { uploadAvatar } from
 
 const router = express.Router();
 
-router.get(
-  "/users",
-  getUser,
-);
+router.get("/users", getUser);
 
 router.post("/image", upload.single("image"), uploadController);
 
@@ -110,12 +121,7 @@ router.post(
   upload.array("image", 3),
   prevPlusUpgradedController,
 );
-router.delete(
-  "/deleteImageController",
-  deleteImageController
-);
-
-
+router.delete("/deleteImageController", deleteImageController);
 
 // gImage
 router.post(
@@ -125,9 +131,18 @@ router.post(
   createGImagesController,
 );
 
-router.get("/getGalleryImageController", accessMiddleware, getGalleryImageController)
+router.get(
+  "/getGalleryImageController",
+  accessMiddleware,
+  getGalleryImageController,
+);
 
-router.delete("/deleteGalleryImageController/:imageId", accessMiddleware, ValidateR(imageGDeleteParamSchema), deleteGalleryImageController)
+router.delete(
+  "/deleteGalleryImageController/:imageId",
+  accessMiddleware,
+  ValidateR(imageGDeleteParamSchema),
+  deleteGalleryImageController,
+);
 
 router.patch(
   "/recorderGalleryController",
@@ -140,8 +155,7 @@ router.patch(
   recorderGalleryController2,
 );
 
-
-// GImageV2 
+// GImageV2
 // router.post(
 //   "/createGImagesV2Controller",
 //   accessMiddleware,
@@ -149,12 +163,30 @@ router.patch(
 //   getGallerySignedUrlController
 // )
 
-
-router.get("/gallery/signed-url", accessMiddleware, getGallerySignedUrlController);
+router.get(
+  "/gallery/signed-url",
+  accessMiddleware,
+  getGallerySignedUrlController,
+);
 router.post("/gallery/save", accessMiddleware, SaveGImagesV2Controller);
-router.delete("/gallery/failed/cleanup", accessMiddleware, cleanupFailedUploadsController);
+router.delete(
+  "/gallery/failed/cleanup",
+  accessMiddleware,
+  cleanupFailedUploadsController,
+);
 
+// video uploads V1
+router.post(
+  "/video/upload",
+  accessMiddleware,
+  uploadVideo.single("video"),
+  uploadVideoController,
+);
 
-
+router.get("/video/signed-url", accessMiddleware, getVideoSignedUrlController);
+router.post("/video/save", accessMiddleware, saveVideoController);
 export default router;
+router.delete("/video/cleanup", accessMiddleware, cleanupFailedVideoUploads)
+router.get("/video/getAll", accessMiddleware, getVideosController)
+router.delete("/video/delete/:id", accessMiddleware, deleteVideoController)
 // header Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbW5meGczMjgwMDAwb291NW9qYmdvcnlvIiwiaWF0IjoxNzgxMjM5MTM3LCJleHAiOjE3ODEyNDAwMzd9.xStiP_Og8_OD0yb_3SNF9lxBCuKL2uc4ARt7nepazQI
