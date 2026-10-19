@@ -39,6 +39,7 @@ import { getUserByEmail, userProfile } from "../controllers/user.controller";
 import {
   accessMiddleware,
   refreshToken,
+  sessionCheck,
 } from "../middlewares/auth/auth.middlewhere.service";
 
 const router = express.Router();
@@ -135,5 +136,6 @@ router.post("/get-new-access-token", refreshToken);
 router.get("/getAllUsers", getAllUsers);
 router.get("/get-by-email", getUserByEmail);
 router.delete("/delete", testDeleteByEmail);
+router.get("/session-check", sessionCheck)
 
 export default router;

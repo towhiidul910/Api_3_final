@@ -32,13 +32,13 @@ export default function LoginPageRedux() {
     { isLoading: isConfirmLoading, isSuccess: isLoginConfirmSuccess },
   ] = useLoginConfirmMutation();
   const [loading, setLoading] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null)
+  const [userId, setUserId] = useState<string | null>(null);
   const handleRequestOTP = async () => {
     try {
       setLoading(true);
       const res = await login({ email, password }).unwrap();
-      setUserId(res.userId)
-      console.log("this is userId", userId)
+      setUserId(res.userId);
+      console.log("this is userId", userId);
       setStep("OTP");
       setResendCooldown(60);
       toast.success("OTP sent. Check your email.");
@@ -60,14 +60,14 @@ export default function LoginPageRedux() {
   const handleConfirmOTP = async () => {
     try {
       setLoading(true);
-          setLoading(true);
-    // if (!userId) {
-    //   // Handle the case where userId is null
-    //   console.error("userId is null");
-    //   return;
-    // }
+      setLoading(true);
+      // if (!userId) {
+      //   // Handle the case where userId is null
+      //   console.error("userId is null");
+      //   return;
+      // }
       const res = await loginConfirm({ token: otp, userId: userId! }).unwrap();
-      
+
       setAccessToken.set(res.accessToken);
       setMessage(res.message);
 
@@ -95,7 +95,6 @@ export default function LoginPageRedux() {
       setResendCooldown(60);
       toast.success("OTP sent. Check your email.");
       setMessage("Email has sended check your Email");
-      
     } catch (err) {
       console.log("Raw error", err);
       const fetchError = err as FetchBaseQueryError;
@@ -111,18 +110,22 @@ export default function LoginPageRedux() {
   };
 
   useEffect(() => {
-    console.log("Updated userId", userId)
-  }, [userId])
+    console.log("Updated userId", userId);
+  }, [userId]);
 
   useEffect(() => {
-      if (resendCooldown <= 0) return;
-  
-      const interval = setInterval(() => {
-        setResendCooldown((prev) => prev - 1);
-      }, 1000);
-  
-      return () => clearInterval(interval);
-    }, [resendCooldown]);
+    if (resendCooldown <= 0) return;
+
+    const interval = setInterval(() => {
+      setResendCooldown((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [resendCooldown]);
+
+  const copyTo = (text:string) => {
+    navigator.clipboard.writeText(text);
+  };
 
   return (
     <div className="mx-auto mt-20 w-full max-w-sm rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
@@ -136,6 +139,18 @@ export default function LoginPageRedux() {
       )}
       {step === "CREDENTIALS" && (
         <div className="space-y-4">
+          <p className="text-black">towhiidul910@gmail.com</p>
+          <button
+            className="inline-flex items-center justify-center p-2 rounded-md bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 cursor-pointer"
+            onClick={() => copyTo("towhiidul910@gmail.com")}>
+            Copy
+          </button>
+          <p className="text-black">1@#Abcdef</p>
+          <button
+            className="inline-flex items-center justify-center p-2 rounded-md bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200 cursor-pointer"
+            onClick={() => copyTo("1@#Abcdef")}>
+            Copy
+          </button>
           <input
             type="email"
             value={email}
@@ -143,7 +158,6 @@ export default function LoginPageRedux() {
             placeholder="Email"
             className="w-full text-black rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none transition focus:border-zinc-900"
           />
-
           <input
             type="password"
             value={password}
@@ -151,12 +165,10 @@ export default function LoginPageRedux() {
             placeholder="Password"
             className="w-full text-black rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none transition focus:border-zinc-900"
           />
-
           <button
             onClick={handleRequestOTP}
             disabled={loading || resendCooldown > 0 || isSuccess}
-            className="w-full cursor-pointer rounded-lg bg-zinc-900 py-2 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60"
-          >
+            className="w-full cursor-pointer rounded-lg bg-zinc-900 py-2 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60">
             {loading
               ? "Sending code..."
               : isSuccess
@@ -181,16 +193,14 @@ export default function LoginPageRedux() {
           <button
             onClick={handleConfirmOTP}
             disabled={loading || otp.length !== 6}
-            className="w-full cursor-pointer rounded-lg bg-zinc-900 py-2 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60"
-          >
+            className="w-full cursor-pointer rounded-lg bg-zinc-900 py-2 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60">
             {loading ? "Verifying..." : "Verify & Login"}
           </button>
 
           <button
             onClick={handleResendOTP}
             disabled={loading || resendCooldown > 0}
-            className="w-full enabled:cursor-pointer rounded-lg bg-zinc-900 py-2 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60"
-          >
+            className="w-full enabled:cursor-pointer rounded-lg bg-zinc-900 py-2 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60">
             {isConfirmLoading
               ? "confirming otp"
               : loading
@@ -203,8 +213,7 @@ export default function LoginPageRedux() {
           </button>
           <button
             onClick={() => setStep("CREDENTIALS")}
-            className="w-full text-sm text-zinc-500 hover:text-zinc-900"
-          >
+            className="w-full text-sm text-zinc-500 hover:text-zinc-900">
             Back
           </button>
         </div>

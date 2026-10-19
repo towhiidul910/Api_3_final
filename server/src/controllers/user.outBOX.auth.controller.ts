@@ -141,7 +141,25 @@ export const processOutbox = async () => {
         where: { id: event.id },
         data: { status: "SENT", processedAt: new Date() },
       });
+      console.info("Outbox email accepted by SMTP", {
+        eventId: event.id,
+        type: event.type,
+      });
     } catch (err) {
+      const error = err instanceof Error ? err : new Error(String(err));
+      console.error("Outbox email delivery failed", {
+        eventId: event.id,
+        type: event.type,
+        retry: event.retries + 1,
+        message: error.message,
+        ...(typeof err === "object" && err !== null && "code" in err
+          ? { code: err.code }
+          : {}),
+        ...(typeof err === "object" && err !== null && "responseCode" in err
+          ? { responseCode: err.responseCode }
+          : {}),
+      });
+
       await prisma.outboxEvent.update({
         where: { id: event.id },
         data: {
@@ -408,7 +426,6 @@ export const verifyOutboxLoginTooManyTryController: RequestHandler = async (
         },
       });
       throw new AppError("Auth", "OTP didn't match", 400);
-
     }
 
     await prisma.verificationToken.update({

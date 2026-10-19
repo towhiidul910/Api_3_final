@@ -122,3 +122,4 @@ export default function ProfilePage() {
 // child render
 
 //* how useRef work : https://chatgpt.com/s/t_69abaeac5be08191954164f0203de239
+//* what does react re-render means : https://chatgpt.com/s/t_6ab522b7cfbc8191b69849376ce03f14

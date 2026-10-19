@@ -58,6 +58,7 @@ export const ModelName = {
   Post: 'Post',
   Image: 'Image',
   Video: 'Video',
+  MuxVideo: 'MuxVideo',
   GImage: 'GImage',
   GImagesV2: 'GImagesV2',
   Comment: 'Comment',
@@ -102,7 +103,8 @@ export const UserScalarFieldEnum = {
   version: 'version',
   emailStatus: 'emailStatus',
   verified: 'verified',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  muxVideoCount: 'muxVideoCount'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -183,6 +185,24 @@ export const VideoScalarFieldEnum = {
 } as const
 
 export type VideoScalarFieldEnum = (typeof VideoScalarFieldEnum)[keyof typeof VideoScalarFieldEnum]
+
+
+export const MuxVideoScalarFieldEnum = {
+  id: 'id',
+  uploadId: 'uploadId',
+  assetId: 'assetId',
+  playbackId: 'playbackId',
+  userId: 'userId',
+  title: 'title',
+  duration: 'duration',
+  status: 'status',
+  order: 'order',
+  thumbnailUrl: 'thumbnailUrl',
+  thumbnailPublicId: 'thumbnailPublicId',
+  createdAt: 'createdAt'
+} as const
+
+export type MuxVideoScalarFieldEnum = (typeof MuxVideoScalarFieldEnum)[keyof typeof MuxVideoScalarFieldEnum]
 
 
 export const GImageScalarFieldEnum = {

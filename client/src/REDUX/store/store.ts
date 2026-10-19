@@ -4,11 +4,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import counterReducer from "../features/counter/counterSlice";
 import { api } from "@/REDUX&AXIOS/api/apiSlice";
 import { apiR } from "../features/api/apiSlice";
+import muxUploadReducer from "@/app/videos/mux/sse/middleware/sse.muxUploadSlice";
 
 export const store = configureStore({
   reducer: {
     // slice, key : value
     counter: counterReducer,
+    muxUpload: muxUploadReducer,
     // api slice
     [api.reducerPath]: api.reducer,
     [apiR.reducerPath]: apiR.reducer,
@@ -25,7 +27,6 @@ export type AppDispatch = typeof store.dispatch;
 //! question
 // why is the middleware
 // how Retry logic work in rtk
-
 
 // Prefetching (underrated spell) (Hover effects
 

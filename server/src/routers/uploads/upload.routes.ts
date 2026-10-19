@@ -39,13 +39,26 @@ import {
 } from "../../uploads/cloudinary/controller/cloudinary.v2.controller";
 import { uploadVideo } from "../../uploads/video/config/multer/multer.video";
 import {
-    cleanupFailedVideoUploads,
+  cleanupFailedVideoUploads,
   deleteVideoController,
   getVideosController,
   getVideoSignedUrlController,
   saveVideoController,
   uploadVideoController,
 } from "../../uploads/video/controller/cloudinary.video.controller";
+import {
+  deleteMuxVideoController,
+  getMuxPlaybackTokenController,
+  getMuxUploadUrlController,
+  getMuxVideosController,
+  muxWebhookController,
+  uploadMuxThumbnailController,
+} from "../../uploads/video/controller/mux/mux.video.controller";
+import { deleteMuxVideoController3, getMuxSignedTokenController, getMuxUploadUrlSignedVController, getMuxUploadUrlSignedVController3 } from "../../uploads/video/controller/mux/private.playback.url.mux.controller";
+import { randomUUID } from "crypto";
+import { muxSSEControllerCV, muxSSEControllerGV, muxSSEWebhookControllerForSignedVController } from "../../uploads/video/controller/mux/sse/sse.version.mux.video.controller";
+import { sseAccessMiddlewareTest } from "../../uploads/video/controller/mux/sse/sseAccessMiddleware.controller.service";
+import { muxSSEWebhookControllerForSignedVControllerMV } from "../../uploads/video/controller/mux/sse/sse.final.mv.controller";
 // import { uploadAvatar } from
 
 const router = express.Router();
@@ -176,6 +189,7 @@ router.delete(
 );
 
 // video uploads V1
+// cloudinary
 router.post(
   "/video/upload",
   accessMiddleware,
@@ -185,8 +199,46 @@ router.post(
 
 router.get("/video/signed-url", accessMiddleware, getVideoSignedUrlController);
 router.post("/video/save", accessMiddleware, saveVideoController);
-export default router;
-router.delete("/video/cleanup", accessMiddleware, cleanupFailedVideoUploads)
-router.get("/video/getAll", accessMiddleware, getVideosController)
-router.delete("/video/delete/:id", accessMiddleware, deleteVideoController)
+
+router.delete("/video/cleanup", accessMiddleware, cleanupFailedVideoUploads);
+router.get("/video/getAll", accessMiddleware, getVideosController);
+router.delete("/video/delete/:id", accessMiddleware, deleteVideoController);
 // header Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbW5meGczMjgwMDAwb291NW9qYmdvcnlvIiwiaWF0IjoxNzgxMjM5MTM3LCJleHAiOjE3ODEyNDAwMzd9.xStiP_Og8_OD0yb_3SNF9lxBCuKL2uc4ARt7nepazQI
+
+// mux video upload
+
+router.post("/mux/upload-url", accessMiddleware, getMuxUploadUrlController);
+// router.post("/mux/webhook", muxWebhookController);
+router.get("/mux/videos", accessMiddleware, getMuxVideosController);
+router.delete("/mux/video/:id", accessMiddleware, deleteMuxVideoController);
+
+router.patch(
+  "/mux/video/:id/thumbnail",
+  accessMiddleware,
+  uploadMuxThumbnailController,
+);
+
+
+
+// private upload 
+
+router.get("/mux/video/:id/token", accessMiddleware, getMuxSignedTokenController)
+router.post("/mux/upload-signed-url", accessMiddleware, getMuxUploadUrlSignedVController)
+router.post("/mux/upload-signed-url-3", accessMiddleware, getMuxUploadUrlSignedVController3)
+router.get("/mux/video/:id/PlaybackToken", accessMiddleware, getMuxPlaybackTokenController)
+
+// delete 2
+
+router.delete("/mux/video/deleteMuxVideoController3/:id", accessMiddleware, deleteMuxVideoController3)
+
+// SSE
+
+// router.post("/mux/webhook", muxSSEVWebhookControllerForSignedVController);
+// router.post("/mux/webhook", muxSSEWebhookControllerForSignedVController);
+router.post("/mux/webhook", muxSSEWebhookControllerForSignedVControllerMV);
+
+
+router.get("/mux/muxSSEControllerGV", sseAccessMiddlewareTest, muxSSEControllerGV)
+router.get("/mux/muxSSEControllerCV", sseAccessMiddlewareTest, muxSSEControllerCV)
+
+export default router;

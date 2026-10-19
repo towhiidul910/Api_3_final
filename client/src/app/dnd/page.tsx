@@ -1,8 +1,8 @@
 "use client"
 import DNDComponentDB from '@/components/DND.DB/DND';
 import DNDComponent from '@/components/DND/DND'
-import VideoTest from '@/components/video/components/video.test';
-import VideoUploader from '@/components/video/components/Video.Uploader';
+import VideoTest from '@/components/video/components/cloudinary/video.test';
+import VideoUploader from '@/components/video/components/cloudinary/Video.Uploader';
 
 const DndPage = () => {
 
