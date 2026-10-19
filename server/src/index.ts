@@ -16,9 +16,11 @@ import userRouterV from "./routers/test/user.verify.route";
 import session from "express-session";
 import userERouter from "./routers/user.email.verify.route";
 import { startOutboxCron } from "./cron/outbox.cron";
-import uploadRouters from "./routers/uploads/upload.routes"
+import uploadRouters from "./routers/uploads/upload.routes";
+import SSEUploadRouters from "./routers/uploads/sse/sse.video.routes"
 import path from "node:path";
 // import { processOutbox } from "./controllers/user.email.verify.controller";
+// import videoRouter from "./routers/uploads/upload.video.routes"
 
 //
 
@@ -28,13 +30,17 @@ const app = express();
 app.use(helmet());
 
 /* 2️⃣ CORS (important for cookies) */
-startOutboxCron();  //! start cron 🌽🌽🌽
+startOutboxCron(); //! start cron 🌽🌽🌽 // login
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:3000",
     credentials: true,
   }),
 );
+
+//* mux
+// ✅ Raw body for Mux webhook verification
+app.use("/upload/mux/webhook", express.raw({ type: "application/json" }));
 
 /* 3️⃣ JSON parsing */
 app.use(express.json());
@@ -101,12 +107,14 @@ app.use("/user2", userRouterV);
 app.use("/user", userERouter);
 //* -- file upload --
 app.use("/upload", uploadRouters);
+app.use("/sse/upload", SSEUploadRouters);
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.use(dbErrorHandler);
 app.use(zodErrorHandler);
 app.use(GlobalErrorHandler);
 
+//
 // app.listen(3002, () => {
 //   console.log("Server running on 3002");
 // });

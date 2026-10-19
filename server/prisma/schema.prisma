@@ -34,18 +34,23 @@ model User {
   verified           Boolean             @default(false) // ✅ is email verified // its not necessary
   verificationTokens VerificationToken[]
 
-  createdAt    DateTime       @default(now())
-  images       Image[]
-  videos       Video[]
-  gImages      GImage[]
-  gImagesV2    GImagesV2[]
-  post         Post[]
-  address      Address?
-  roles        Role[]         @relation("UserRoles")
-  userGroup    UserGroup[]
-  refreshToken RefreshToken[]
-  authProvider AuthProvider[]
-  session      Session[]
+  createdAt     DateTime       @default(now())
+  //* Gallery
+  // images
+  images        Image[]
+  // video
+  videos        Video[]
+  muxVideoCount Int            @default(0)
+  muxVideos     MuxVideo[]
+  gImages       GImage[]
+  gImagesV2     GImagesV2[]
+  post          Post[]
+  address       Address?
+  roles         Role[]         @relation("UserRoles")
+  userGroup     UserGroup[]
+  refreshToken  RefreshToken[]
+  authProvider  AuthProvider[]
+  session       Session[]
 }
 
 enum EmailStatus {
@@ -127,6 +132,8 @@ model Image {
   createdAt     DateTime @default(now())
 }
 
+//* Video
+
 model Video {
   id String @id @default(uuid())
 
@@ -141,6 +148,25 @@ model Video {
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// mux video
+
+model MuxVideo {
+  id                String   @id @default(uuid())
+  uploadId          String   @unique // Mux upload ID
+  assetId           String?  @unique // Mux asset ID (available after processing)
+  playbackId        String? // used to play the video
+  userId            String
+  title             String?
+  duration          Float?
+  status            String   @default("waiting") // waiting, ready, errored
+  order             Int
+  thumbnailUrl      String? // for custom thumbnail
+  thumbnailPublicId String? // for (delete/manage) the image
+  createdAt         DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model GImage {
@@ -246,7 +272,7 @@ model Session {
 // 15. if you get problem .
 // npx prisma migrate reset
 
-// 16. add only one Schema
+//* 16. add only one Schema
 // Safest Way (No Data Loss)
 
 // Run these IN ORDER:
@@ -263,3 +289,6 @@ model Session {
 // then:
 
 // npx prisma migrate dev --name add_gimages_v2
+
+//* check prisma version 
+// run : npx prisma -v

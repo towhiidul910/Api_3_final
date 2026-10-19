@@ -7,6 +7,7 @@ export const setAccessToken = {
   },
   set(token: string) {
     accessToken = token;
+    console.log(accessToken)
   },
   clear() {
     accessToken = null;

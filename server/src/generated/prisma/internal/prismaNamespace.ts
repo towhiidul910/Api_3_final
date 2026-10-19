@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.7.0
- * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
+ * Prisma Client JS version: 7.8.0
+ * Query Engine version: 3c6e192761c0362d496ed980de936e2f3cebcd3a
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.7.0",
-  engine: "75cbdc1eb7150937890ad5465d861175c6624711"
+  client: "7.8.0",
+  engine: "3c6e192761c0362d496ed980de936e2f3cebcd3a"
 }
 
 /**
@@ -391,6 +391,7 @@ export const ModelName = {
   Post: 'Post',
   Image: 'Image',
   Video: 'Video',
+  MuxVideo: 'MuxVideo',
   GImage: 'GImage',
   GImagesV2: 'GImagesV2',
   Comment: 'Comment',
@@ -416,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "outboxEvent" | "payload" | "verificationToken" | "post" | "image" | "video" | "gImage" | "gImagesV2" | "comment" | "address" | "group" | "role" | "userGroup" | "refreshToken" | "authProvider" | "session"
+    modelProps: "user" | "outboxEvent" | "payload" | "verificationToken" | "post" | "image" | "video" | "muxVideo" | "gImage" | "gImagesV2" | "comment" | "address" | "group" | "role" | "userGroup" | "refreshToken" | "authProvider" | "session"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -935,6 +936,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.VideoCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.VideoCountAggregateOutputType> | number
+        }
+      }
+    }
+    MuxVideo: {
+      payload: Prisma.$MuxVideoPayload<ExtArgs>
+      fields: Prisma.MuxVideoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MuxVideoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MuxVideoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MuxVideoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MuxVideoPayload>
+        }
+        findFirst: {
+          args: Prisma.MuxVideoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MuxVideoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MuxVideoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MuxVideoPayload>
+        }
+        findMany: {
+          args: Prisma.MuxVideoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MuxVideoPayload>[]
+        }
+        create: {
+          args: Prisma.MuxVideoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MuxVideoPayload>
+        }
+        createMany: {
+          args: Prisma.MuxVideoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MuxVideoCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MuxVideoPayload>[]
+        }
+        delete: {
+          args: Prisma.MuxVideoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MuxVideoPayload>
+        }
+        update: {
+          args: Prisma.MuxVideoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MuxVideoPayload>
+        }
+        deleteMany: {
+          args: Prisma.MuxVideoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MuxVideoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MuxVideoUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MuxVideoPayload>[]
+        }
+        upsert: {
+          args: Prisma.MuxVideoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MuxVideoPayload>
+        }
+        aggregate: {
+          args: Prisma.MuxVideoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMuxVideo>
+        }
+        groupBy: {
+          args: Prisma.MuxVideoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MuxVideoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MuxVideoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MuxVideoCountAggregateOutputType> | number
         }
       }
     }
@@ -1733,7 +1808,8 @@ export const UserScalarFieldEnum = {
   version: 'version',
   emailStatus: 'emailStatus',
   verified: 'verified',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  muxVideoCount: 'muxVideoCount'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1814,6 +1890,24 @@ export const VideoScalarFieldEnum = {
 } as const
 
 export type VideoScalarFieldEnum = (typeof VideoScalarFieldEnum)[keyof typeof VideoScalarFieldEnum]
+
+
+export const MuxVideoScalarFieldEnum = {
+  id: 'id',
+  uploadId: 'uploadId',
+  assetId: 'assetId',
+  playbackId: 'playbackId',
+  userId: 'userId',
+  title: 'title',
+  duration: 'duration',
+  status: 'status',
+  order: 'order',
+  thumbnailUrl: 'thumbnailUrl',
+  thumbnailPublicId: 'thumbnailPublicId',
+  createdAt: 'createdAt'
+} as const
+
+export type MuxVideoScalarFieldEnum = (typeof MuxVideoScalarFieldEnum)[keyof typeof MuxVideoScalarFieldEnum]
 
 
 export const GImageScalarFieldEnum = {
@@ -2164,6 +2258,21 @@ export type PrismaClientOptions = ({
    * ```
    */
   comments?: runtime.SqlCommenterPlugin[]
+  /**
+   * Optional maximum size for the query plan cache. If not provided, a default size will be used.
+   * A value of `0` can be used to disable the cache entirely. A higher cache size can improve
+   * performance for applications that execute a large number of unique queries, while a smaller
+   * cache size can reduce memory usage.
+   * 
+   * @example
+   * ```
+   * const prisma = new PrismaClient({
+   *   adapter,
+   *   queryPlanCacheMaxSize: 100,
+   * })
+   * ```
+   */
+  queryPlanCacheMaxSize?: number
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
@@ -2173,6 +2282,7 @@ export type GlobalOmitConfig = {
   post?: Prisma.PostOmit
   image?: Prisma.ImageOmit
   video?: Prisma.VideoOmit
+  muxVideo?: Prisma.MuxVideoOmit
   gImage?: Prisma.GImageOmit
   gImagesV2?: Prisma.GImagesV2Omit
   comment?: Prisma.CommentOmit

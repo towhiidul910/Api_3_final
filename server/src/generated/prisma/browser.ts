@@ -53,6 +53,11 @@ export type Image = Prisma.ImageModel
  */
 export type Video = Prisma.VideoModel
 /**
+ * Model MuxVideo
+ * 
+ */
+export type MuxVideo = Prisma.MuxVideoModel
+/**
  * Model GImage
  * 
  */
